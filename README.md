@@ -68,7 +68,8 @@ Adaptation directe ne veut pas dire copie : les deux projets ne répondent pas a
 ### 1. Jev : décider avec des probabilités, pas avec la bonne volonté d'un LLM
 
 <p align="center">
-  <img src="assets/raphael-jev.png" alt="Raphael analyse un échange : Jev donne une probabilité pour chaque critère (fait durable 0,91, préférence 0,12, leçon 0,08, simple consigne 0,05, détail isolé 0,10) ; le code calcule un score de 0,82, au-dessus du seuil de 0,25, et l'échange est retenu" width="100%">
+  <img src="https://static.wikia.nocookie.net/tensei-shitara-slime-datta-ken/images/9/9f/Raphael_Abstract.png/revision/latest?cb=20210808130312" alt="Raphael, le Roi de la Sagesse, dans Moi, quand je me réincarne en Slime" width="420">
+  <br><sub><i>Raphael, le Roi de la Sagesse. Image : <a href="https://tensei-shitara-slime-datta-ken.fandom.com/wiki/Raphael">wiki Fandom de Tensura</a>.</i></sub>
 </p>
 
 **Ce qu'est Jev.** Jev est un modèle *System One* de [TypeSafe](https://docs.typesafe.ai) : un petit modèle rapide qui n'écrit rien, il **répond à des questions typées** sur un état JSON.
@@ -80,6 +81,11 @@ Adaptation directe ne veut pas dire copie : les deux projets ne répondent pas a
 Toutes les questions d'un appel sont évaluées en parallèle, en 150 à 250 ms environ, pour 0,042 $ par million de tokens en entrée. Les modèles System One sont entraînés à être **calibrés** : leurs probabilités sont optimisées pour refléter l'incertitude réelle, mesurée sur des groupes de prédictions (ce qui ne garantit pas chaque réponse prise isolément).
 
 **Pourquoi c'est pertinent.** Demander à un LLM « faut-il retenir cet échange ? » donne une réponse en prose, qui varie d'une fois sur l'autre, et qu'on ne peut ni mesurer ni régler. Jev donne un **nombre**, et un nombre se compare à un seuil fixé dans le code, se mesure et se règle :
+
+<p align="center">
+  <img src="assets/raphael-jev.png" alt="Raphael analyse un échange : Jev donne une probabilité pour chaque critère (fait durable 0,91, préférence 0,12, leçon 0,08, simple consigne 0,05, détail isolé 0,10) ; le code calcule un score de 0,82, au-dessus du seuil de 0,25, et l'échange est retenu" width="100%">
+</p>
+
 
 - **La décision devient reproductible.** Les probabilités de Jev peuvent varier de quelques centièmes d'un appel à l'autre, mais la règle de décision, elle, est écrite dans `config.py`.
 - **La grille de capture est mesurée.** Sur un jeu de 50 passages annotés à la main, une seule question « faut-il retenir ? » plafonnait à une AUC de 0,69 et se trompait plus souvent que « tout garder ». Découpée en 7 questions atomiques combinées par le code, la grille monte à 0,80 :
@@ -230,4 +236,4 @@ L'architecture détaillée et les invariants sont décrits dans [`CLAUDE.md`](CL
 
 - [Kenjaku](https://github.com/tpierrain/kenjaku), de Thomas Pierrain (Apache 2.0) : Raphael en est une adaptation directe (voir [Ce que Raphael doit à Kenjaku](#ce-que-raphael-doit-à-kenjaku)).
 - [Jev](https://docs.typesafe.ai) (TypeSafe) pour les décisions, [EmbeddingGemma](https://huggingface.co/onnx-community/embeddinggemma-300m-ONNX) (Google) pour les embeddings.
-- *Moi, quand je me réincarne en Slime* (*Tensei Shitara Slime Datta Ken*) est l'œuvre de Fuse. Le nom de Raphael est un hommage de fan ; les illustrations sont des créations originales, et ce projet n'est affilié ni à l'œuvre ni à ses éditeurs.
+- *Moi, quand je me réincarne en Slime* (*Tensei Shitara Slime Datta Ken*) est l'œuvre de Fuse. Le nom de Raphael est un hommage de fan ; l'image de Raphael de la section Jev est tirée de l'anime (via le wiki Fandom de la série, droits réservés à leurs détenteurs) ; la bannière et le schéma d'analyse sont des créations originales. Ce projet n'est affilié ni à l'œuvre ni à ses éditeurs.
