@@ -1,0 +1,18 @@
+# Recréés ou retéléchargés (et trop gros pour GitHub : le modèle dépasse 100 Mo)
+.venv/
+modeles/
+__pycache__/
+.env
+
+# Données personnelles : base des souvenirs, journal, jeu d'évaluation annoté
+data/
+*.docx
+*.pdf
+
+# Réglages personnels (modèle : cerveau/config_local.exemple.py)
+cerveau/config_local.py
+
+# Fichiers de travail de SQLite et verrou du worker, recréés à l'exécution
+*.db
+*.db-*
+*.lock

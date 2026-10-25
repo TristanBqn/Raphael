@@ -1,0 +1,147 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="640" viewBox="0 0 1280 640">
+  <title>Raphael, Roi de la Sagesse : un slime bleu sur un cercle magique, et les messages de son second cerveau</title>
+  <defs>
+    <radialGradient id="fond" cx="28%" cy="62%" r="85%">
+      <stop offset="0" stop-color="#16244f"/>
+      <stop offset="0.55" stop-color="#0a1230"/>
+      <stop offset="1" stop-color="#050816"/>
+    </radialGradient>
+    <linearGradient id="slime" x1="0" y1="0" x2="0.35" y2="1">
+      <stop offset="0" stop-color="#b9f3ff"/>
+      <stop offset="0.45" stop-color="#5cc8ff"/>
+      <stop offset="1" stop-color="#2369e8"/>
+    </linearGradient>
+    <radialGradient id="reflet" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.95"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="noyau" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="0.35" stop-color="#9ff6ff"/>
+      <stop offset="1" stop-color="#3fd8ff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="sol" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#5ee7ff" stop-opacity="0.45"/>
+      <stop offset="1" stop-color="#5ee7ff" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="panneau" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#5ee7ff" stop-opacity="0.16"/>
+      <stop offset="1" stop-color="#3a7bff" stop-opacity="0.06"/>
+    </linearGradient>
+    <linearGradient id="titre" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#e9fbff"/>
+      <stop offset="1" stop-color="#7fe3ff"/>
+    </linearGradient>
+    <filter id="lueur" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="5" result="flou"/>
+      <feMerge><feMergeNode in="flou"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="halo" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="14"/>
+    </filter>
+    <pattern id="hex" width="56" height="97" patternUnits="userSpaceOnUse">
+      <path d="M28 0 L56 16 L56 48 L28 64 L0 48 L0 16 Z M28 64 L28 97" fill="none" stroke="#5ee7ff" stroke-opacity="0.05" stroke-width="1"/>
+    </pattern>
+  </defs>
+
+  <!-- Fond : nuit étoilée et trame hexagonale -->
+  <rect width="1280" height="640" fill="url(#fond)"/>
+  <rect width="1280" height="640" fill="url(#hex)"/>
+  <g fill="#ffffff">
+    <circle cx="74" cy="58" r="1.4" opacity="0.7"/><circle cx="188" cy="122" r="1" opacity="0.5"/>
+    <circle cx="262" cy="38" r="1.6" opacity="0.8"/><circle cx="418" cy="96" r="1" opacity="0.4"/>
+    <circle cx="530" cy="44" r="1.3" opacity="0.6"/><circle cx="590" cy="160" r="0.9" opacity="0.4"/>
+    <circle cx="44" cy="232" r="1" opacity="0.5"/><circle cx="120" cy="330" r="1.2" opacity="0.4"/>
+    <circle cx="560" cy="300" r="1.1" opacity="0.5"/><circle cx="610" cy="560" r="1.2" opacity="0.4"/>
+    <circle cx="1240" cy="40" r="1.3" opacity="0.6"/><circle cx="1180" cy="600" r="1" opacity="0.4"/>
+    <circle cx="36" cy="590" r="1.3" opacity="0.5"/><circle cx="470" cy="610" r="1" opacity="0.4"/>
+  </g>
+
+  <!-- Cercle magique -->
+  <g transform="translate(320 505)">
+    <ellipse rx="250" ry="66" fill="url(#sol)"/>
+    <g fill="none" stroke="#5ee7ff" filter="url(#lueur)">
+      <ellipse rx="236" ry="60" stroke-width="2.2" stroke-opacity="0.9"/>
+      <ellipse rx="214" ry="54" stroke-width="7" stroke-opacity="0.55" stroke-dasharray="2 9 14 6 3 12"/>
+      <ellipse rx="190" ry="48" stroke-width="1.6" stroke-opacity="0.8"/>
+      <ellipse rx="120" ry="30" stroke-width="1.4" stroke-opacity="0.6" stroke-dasharray="20 8"/>
+      <polygon points="0,-48 166,24 -166,24" stroke-width="1.4" stroke-opacity="0.55"/>
+      <polygon points="0,48 166,-24 -166,-24" stroke-width="1.4" stroke-opacity="0.55"/>
+    </g>
+  </g>
+
+  <!-- Particules qui montent du cercle -->
+  <g fill="#9ff6ff" filter="url(#lueur)">
+    <circle cx="150" cy="430" r="2.4" opacity="0.8"/><circle cx="196" cy="372" r="1.8" opacity="0.6"/>
+    <circle cx="470" cy="420" r="2.2" opacity="0.8"/><circle cx="508" cy="350" r="1.6" opacity="0.5"/>
+    <circle cx="112" cy="300" r="1.5" opacity="0.4"/><circle cx="540" cy="250" r="1.8" opacity="0.5"/>
+  </g>
+
+  <!-- Le slime -->
+  <ellipse cx="320" cy="350" rx="150" ry="130" fill="#3fb6ff" opacity="0.35" filter="url(#halo)"/>
+  <ellipse cx="320" cy="500" rx="130" ry="18" fill="#02060f" opacity="0.45"/>
+  <path d="M320 190
+           C 334 236, 372 262, 412 296
+           C 452 330, 470 376, 458 420
+           C 446 470, 392 500, 320 500
+           C 248 500, 194 470, 182 420
+           C 170 376, 188 330, 228 296
+           C 268 262, 306 236, 320 190 Z"
+        fill="url(#slime)" stroke="#d9f8ff" stroke-opacity="0.55" stroke-width="2"/>
+  <ellipse cx="262" cy="318" rx="34" ry="20" transform="rotate(-32 262 318)" fill="url(#reflet)"/>
+  <ellipse cx="292" cy="284" rx="9" ry="6" transform="rotate(-32 292 284)" fill="#ffffff" opacity="0.85"/>
+  <ellipse cx="395" cy="455" rx="40" ry="12" transform="rotate(-18 395 455)" fill="#ffffff" opacity="0.12"/>
+  <!-- Visage -->
+  <ellipse cx="284" cy="398" rx="11" ry="16" fill="#0d1a3d"/>
+  <ellipse cx="356" cy="398" rx="11" ry="16" fill="#0d1a3d"/>
+  <circle cx="288" cy="391" r="4.2" fill="#ffffff"/><circle cx="360" cy="391" r="4.2" fill="#ffffff"/>
+  <circle cx="281" cy="404" r="1.8" fill="#9ff6ff"/><circle cx="353" cy="404" r="1.8" fill="#9ff6ff"/>
+  <path d="M308 428 Q320 438 332 428" fill="none" stroke="#0d1a3d" stroke-width="3" stroke-linecap="round"/>
+  <ellipse cx="258" cy="424" rx="13" ry="7" fill="#ff8fc8" opacity="0.35"/>
+  <ellipse cx="382" cy="424" rx="13" ry="7" fill="#ff8fc8" opacity="0.35"/>
+
+  <!-- L'orbe de Raphael et son orbite d'analyse -->
+  <g transform="rotate(-14 320 350)">
+    <ellipse cx="320" cy="350" rx="210" ry="58" fill="none" stroke="#7fe3ff" stroke-opacity="0.55" stroke-width="1.6" stroke-dasharray="3 7"/>
+    <circle cx="530" cy="350" r="4" fill="#9ff6ff" filter="url(#lueur)"/>
+    <circle cx="110" cy="350" r="3" fill="#9ff6ff" filter="url(#lueur)"/>
+  </g>
+  <circle cx="455" cy="200" r="34" fill="url(#noyau)" filter="url(#lueur)"/>
+  <circle cx="455" cy="200" r="13" fill="#ffffff"/>
+  <g fill="none" stroke="#9ff6ff" stroke-width="1.3" stroke-opacity="0.85">
+    <ellipse cx="455" cy="200" rx="28" ry="10" transform="rotate(30 455 200)"/>
+    <ellipse cx="455" cy="200" rx="28" ry="10" transform="rotate(-30 455 200)"/>
+  </g>
+  <path d="M478 214 C 540 250, 590 250, 640 214" fill="none" stroke="#7fe3ff" stroke-opacity="0.5" stroke-width="1.4" stroke-dasharray="4 6"/>
+
+  <!-- Titre -->
+  <g font-family="Segoe UI, Noto Sans, Helvetica Neue, Arial, sans-serif">
+    <text x="660" y="92" font-size="66" font-weight="700" letter-spacing="10" fill="url(#titre)" filter="url(#lueur)">RAPHAEL</text>
+    <text x="664" y="130" font-size="21" fill="#b9d8ff" letter-spacing="1">Roi de la Sagesse · un second cerveau pour Claude Code</text>
+  </g>
+
+  <!-- Messages de Raphael -->
+  <g font-family="Segoe UI, Noto Sans, Helvetica Neue, Arial, sans-serif">
+    <g transform="translate(660 166)">
+      <rect width="580" height="112" rx="12" fill="url(#panneau)" stroke="#5ee7ff" stroke-opacity="0.75" stroke-width="1.5"/>
+      <rect x="0" y="0" width="5" height="112" rx="2" fill="#5ee7ff" opacity="0.85"/>
+      <text x="26" y="38" font-size="19" font-weight="700" fill="#7fe3ff" letter-spacing="1">《Avis》</text>
+      <text x="26" y="70" font-size="21" fill="#eef8ff">Échange analysé par Jev.</text>
+      <text x="26" y="98" font-size="21" fill="#eef8ff">Probabilité qu'il mérite un souvenir : <tspan fill="#7fe3ff" font-weight="700">0,87</tspan>.</text>
+    </g>
+    <g transform="translate(660 298)">
+      <rect width="580" height="86" rx="12" fill="url(#panneau)" stroke="#5ee7ff" stroke-opacity="0.75" stroke-width="1.5"/>
+      <rect x="0" y="0" width="5" height="86" rx="2" fill="#5ee7ff" opacity="0.85"/>
+      <text x="26" y="36" font-size="19" font-weight="700" fill="#7fe3ff" letter-spacing="1">《Rapport》</text>
+      <text x="26" y="68" font-size="21" fill="#eef8ff">Souvenir rangé dans le tiroir <tspan fill="#7fe3ff">toi/Matériel</tspan>.</text>
+    </g>
+    <g transform="translate(660 404)">
+      <rect width="580" height="112" rx="12" fill="url(#panneau)" stroke="#5ee7ff" stroke-opacity="0.75" stroke-width="1.5"/>
+      <rect x="0" y="0" width="5" height="112" rx="2" fill="#5ee7ff" opacity="0.85"/>
+      <text x="26" y="38" font-size="19" font-weight="700" fill="#7fe3ff" letter-spacing="1">《Réponse》</text>
+      <text x="26" y="70" font-size="21" fill="#eef8ff">Votre NAS est un Synology installé au bureau.</text>
+      <text x="26" y="98" font-size="17" fill="#9fb8dd">souvenir injecté avant que Claude ne réponde · dit par vous</text>
+    </g>
+    <text x="664" y="572" font-size="17" fill="#7f97c4" letter-spacing="2">hooks · Jev · Haiku · SQLite · EmbeddingGemma</text>
+  </g>
+</svg>

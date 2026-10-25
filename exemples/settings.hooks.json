@@ -1,0 +1,48 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"C:/chemin/vers/Raphael/.venv/Scripts/python.exe\" \"C:/chemin/vers/Raphael/cerveau/demarrage.py\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"C:/chemin/vers/Raphael/.venv/Scripts/python.exe\" \"C:/chemin/vers/Raphael/cerveau/porte1.py\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"C:/chemin/vers/Raphael/.venv/Scripts/python.exe\" \"C:/chemin/vers/Raphael/cerveau/porte2.py\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"C:/chemin/vers/Raphael/.venv/Scripts/python.exe\" \"C:/chemin/vers/Raphael/cerveau/fin_session.py\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}
