@@ -105,30 +105,21 @@ Toutes les questions d'un appel sont évaluées en parallèle, en 150 à 250 ms 
 | Mode projet | « Le message ne porte-t-il que sur le projet ouvert ? » | ≥ 0,5 : seules les préférences et leçons générales passent |
 | Ouvrir un tiroir proche | « Le message parle-t-il de ce sujet ? » | ≥ 0,5 |
 
+**Le contexte fourni à Jev.** Un message comme « oui, fais-le » ou « et sur l'autre machine ? » ne veut rien dire pris seul : juger une phrase isolée fausserait les probabilités. À la porte 1, Jev reçoit donc votre message accompagné des **2 échanges précédents** de la conversation (votre message et la réponse de Claude), chacun **coupé à 300 caractères**, du plus récent au plus ancien (`CONTEXTE_ECHANGES` et `CONTEXTE_CARACTERES` dans `config.py`). La consigne lui demande de juger votre message, les échanges précédents servant seulement à comprendre à quoi il renvoie. Pourquoi pas davantage : la précision de Jev baisse quand l'état qu'on lui envoie grossit, et le contexte doit éclairer la décision sans la noyer. Haiku reçoit le même contexte quand il rédige. À la capture, Jev juge l'échange lui-même ; s'il le met en attente, il le réexamine ensuite avec les 3 échanges qui suivent.
+
 Les questions sont écrites en anglais (Jev le gère mieux que le français) et le contenu reste en français. La version du modèle est épinglée (`jev-1.13.0`) : les seuils sont réglés pour elle.
 
 **Et ensuite.** Toutes les décisions passent par un seul module, `cerveau/decideur.py`. Dans la continuité, **Jev sera remplacé par un modèle local comme Laya** : mêmes questions, seuils revalidés sur le jeu d'évaluation, et plus aucun échange envoyé à l'extérieur pour décider.
 
 ### 2. Le système des portes
 
-Raphael s'accroche aux événements de Claude Code par quatre hooks. Les deux « portes » sont celles par lesquelles passe chaque échange.
+Raphael s'accroche aux événements de Claude Code par quatre hooks. Les deux « portes » sont celles par lesquelles passe chaque échange : la porte 1 rappelle ce qui sert avant que Claude ne lise votre message, la porte 2 dépose l'échange pour qu'il soit jugé et rédigé en arrière-plan.
 
-```
-Session ouverte ───────────► démarrage (SessionStart)
-                              · bannière de santé, sonde en arrière-plan, préchauffage du modèle
-Message de l'utilisateur ──► porte 1 (UserPromptSubmit) : le rappel, avant que Claude ne lise
-                              · masque les secrets, enregistre l'échange
-                              · ouvre les tiroirs utiles, recherche hybride (12 candidats au plus)
-                              · un seul appel Jev → au plus 5 souvenirs injectés dans le contexte
-Réponse de Claude ─────────► porte 2 (Stop) : la capture, en quelques millisecondes
-                              · complète l'échange, le dépose dans l'inbox, réveille le worker
-Worker (arrière-plan) ─────► Jev évalue l'échange : retenir, attendre la suite ou rejeter
-                              · Haiku rédige les souvenirs par lots, puis vectorisation et rangement
-Session fermée ────────────► fin de session (SessionEnd)
-                              · tranche les échanges en attente, force la rédaction
-```
+<p align="center">
+  <img src="assets/portes.png" alt="Diagramme des portes de Raphael : à l'ouverture de session, le démarrage affiche la bannière de santé et lance le service d'embeddings ; à chaque message, la porte 1 relit les 2 échanges précédents, ouvre les tiroirs, fait une recherche hybride puis demande à Jev quels souvenirs injecter (au plus 5) ; quand Claude a répondu, la porte 2 dépose l'échange dans l'inbox et réveille le worker, qui fait juger l'échange par Jev, rédiger les souvenirs par Haiku, calcule les vecteurs et range dans les tiroirs ; à la fermeture, la fin de session force la rédaction. Tout est stocké dans une base SQLite locale." width="100%">
+</p>
 
-**Porte 1, le rappel** (environ 0,65 s par message). En un seul appel, Jev dit si le message a besoin de la mémoire, s'il ne porte que sur le projet ouvert, quels tiroirs proches le concernent vraiment, et quels candidats sont pertinents. Trois voies d'injection : normale (besoin ≥ 0,5 puis pertinence ≥ 0,35), pertinence forte (une question qui paraît générale mais qu'un souvenir personnel change, comme « comment dois-je signer mes commits ? »), et rattrapage (le besoin est net, Jev hésite, le candidat le plus proche par le sens passe). Si Jev met plus de 1,5 s, une heuristique locale prend le relais. Les échanges capturés mais pas encore rédigés restent retrouvables.
+**Porte 1, le rappel** (environ 0,65 s par message). Avec votre message et les 2 échanges précédents, en un seul appel, Jev dit si le message a besoin de la mémoire, s'il ne porte que sur le projet ouvert, quels tiroirs proches le concernent vraiment, et quels candidats sont pertinents. Trois voies d'injection : normale (besoin ≥ 0,5 puis pertinence ≥ 0,35), pertinence forte (une question qui paraît générale mais qu'un souvenir personnel change, comme « comment dois-je signer mes commits ? »), et rattrapage (le besoin est net, Jev hésite, le candidat le plus proche par le sens passe). Si Jev met plus de 1,5 s, une heuristique locale prend le relais. Les échanges capturés mais pas encore rédigés restent retrouvables.
 
 **Porte 2, la capture.** Elle ne fait aucun appel réseau : elle ajoute la réponse de Claude à l'échange et réveille le worker, qui travaille en arrière-plan sans jamais bloquer la conversation.
 
@@ -228,7 +219,7 @@ Optionnel : importer l'historique Claude Code existant avec `.venv\Scripts\pytho
 | `spikes/` | Test de la clé Jev, conversion Word → PDF |
 | `docs/` | Notes sur la documentation Jev |
 | `exemples/` | Déclaration des hooks pour `~/.claude/settings.json` |
-| `assets/` | Illustrations (sources SVG et rendus PNG) |
+| `assets/` | Illustrations et diagramme des portes (sources SVG et HTML, rendus PNG) |
 
 L'architecture détaillée et les invariants sont décrits dans [`CLAUDE.md`](CLAUDE.md).
 

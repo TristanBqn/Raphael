@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Les portes de Raphael</title>
+<!-- Source du diagramme assets/portes.png : capture à 1400 × 980 (navigateur headless, facteur 2). -->
+<style>
+  html, body { margin: 0; width: 1400px; height: 980px; overflow: hidden; }
+  body {
+    position: relative;
+    font-family: "Segoe UI", "Noto Sans", "Helvetica Neue", Arial, sans-serif;
+    color: #eef8ff;
+    background: radial-gradient(ellipse at 30% 40%, #16244f 0%, #0a1230 55%, #050816 100%);
+  }
+  .titre { position: absolute; left: 30px; top: 22px; }
+  .titre h1 { margin: 0; font-size: 30px; letter-spacing: 3px;
+              background: linear-gradient(90deg, #e9fbff, #7fe3ff); -webkit-background-clip: text; color: transparent; }
+  .titre p { margin: 4px 0 0; font-size: 15px; color: #9fb8dd; }
+
+  .couloir { position: absolute; left: 24px; width: 150px; font-size: 12px; font-weight: 700; letter-spacing: 2px;
+             text-transform: uppercase; color: #7f97c4; border-left: 3px solid #5ee7ff; padding-left: 10px; line-height: 1.4; }
+  .couloir span { display: block; font-weight: 400; letter-spacing: 0; text-transform: none; font-size: 12px; color: #6b81ad; }
+  .separation { position: absolute; left: 24px; right: 24px; border-top: 1px dashed rgba(94, 231, 255, 0.15); }
+
+  .pastille { position: absolute; top: 118px; height: 56px; z-index: 2; box-sizing: border-box; border-radius: 28px;
+              display: flex; align-items: center; justify-content: center; text-align: center; padding: 0 16px;
+              font-size: 15px; font-weight: 600; background: #13214a; border: 1.5px solid rgba(185, 216, 255, 0.45); }
+
+  .carte { position: absolute; z-index: 2; box-sizing: border-box; border-radius: 14px; padding: 12px 16px;
+           background: linear-gradient(135deg, rgba(94, 231, 255, 0.13), rgba(58, 123, 255, 0.05)), #0b1533;
+           border: 1.5px solid rgba(94, 231, 255, 0.65); box-shadow: 0 0 18px rgba(94, 231, 255, 0.12); }
+  .carte.porte { border-color: #5ee7ff; box-shadow: 0 0 24px rgba(94, 231, 255, 0.28); }
+  .entete { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+  .carte h3 { margin: 0; font-size: 16.5px; color: #7fe3ff; white-space: nowrap; }
+  .crochet { font-family: Consolas, "Cascadia Mono", monospace; font-size: 12px; color: #9fb8dd; margin-top: 2px; }
+  .duree { font-size: 11.5px; font-weight: 700; color: #050816; background: #7fe3ff; border-radius: 10px; padding: 2px 7px;
+           white-space: nowrap; }
+  .duree.lent { background: #b9a3ff; }
+  .carte ul, .carte ol { margin: 8px 0 0; padding-left: 20px; font-size: 13.5px; line-height: 1.38; color: #dbe9ff; }
+  .carte li { margin-bottom: 3px; }
+  .carte .note { margin-top: 6px; font-size: 12.5px; color: #9fb8dd; }
+
+  .jev, .haiku { display: inline-block; font-size: 11.5px; font-weight: 700; border-radius: 6px; padding: 0 6px;
+                 margin-right: 4px; color: #050816; }
+  .jev { background: #5ee7ff; }
+  .haiku { background: #b9a3ff; }
+
+  .etape { position: absolute; z-index: 3; box-sizing: border-box; width: 245px; height: 44px; border-radius: 10px;
+           display: flex; align-items: center; padding: 0 10px; font-size: 13px; line-height: 1.25;
+           background: rgba(10, 18, 48, 0.9); border: 1px solid rgba(94, 231, 255, 0.45); }
+
+  .boite { position: absolute; z-index: 2; top: 840px; height: 84px; box-sizing: border-box; border-radius: 12px;
+           padding: 10px 14px; background: #0e1838; border: 1.5px solid rgba(185, 216, 255, 0.35); }
+  .boite b { display: block; font-size: 14.5px; color: #eef8ff; }
+  .boite span { display: block; font-size: 12.5px; color: #9fb8dd; margin-top: 3px; line-height: 1.35; }
+
+  .legende { position: absolute; left: 200px; top: 944px; font-size: 13px; color: #9fb8dd; display: flex; gap: 22px;
+             align-items: center; }
+
+  svg { position: absolute; left: 0; top: 0; z-index: 1; }
+  svg .flux { stroke: #7fe3ff; stroke-width: 2; fill: none; }
+  svg .temps { stroke: rgba(185, 216, 255, 0.35); stroke-width: 2; fill: none; }
+  svg text { font-family: "Segoe UI", Arial, sans-serif; font-size: 13px; fill: #b9d8ff; font-style: italic; }
+</style>
+</head>
+<body>
+  <div class="titre">
+    <h1>LES PORTES DE RAPHAEL</h1>
+    <p>Ce qui se passe à chaque événement d'une session Claude Code</p>
+  </div>
+
+  <div class="couloir" style="top: 128px">Vous et Claude<span>la conversation</span></div>
+  <div class="couloir" style="top: 370px">Portes<span>hooks synchrones</span></div>
+  <div class="couloir" style="top: 665px">Arrière-plan<span>sans bloquer</span></div>
+  <div class="couloir" style="top: 862px">Base locale<span>SQLite</span></div>
+  <div class="separation" style="top: 206px"></div>
+  <div class="separation" style="top: 587px"></div>
+  <div class="separation" style="top: 808px"></div>
+
+  <svg width="1400" height="980" viewBox="0 0 1400 980">
+    <defs>
+      <marker id="fleche" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M0 0 L10 5 L0 10 Z" fill="#7fe3ff"/>
+      </marker>
+      <marker id="fleche-temps" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+        <path d="M0 0 L10 5 L0 10 Z" fill="rgba(185,216,255,0.6)"/>
+      </marker>
+    </defs>
+    <!-- Le fil du temps -->
+    <line class="temps" x1="190" y1="146" x2="1388" y2="146" marker-end="url(#fleche-temps)"/>
+    <!-- Événements → portes -->
+    <line class="flux" x1="340" y1="175" x2="340" y2="226" marker-end="url(#fleche)"/>
+    <line class="flux" x1="650" y1="175" x2="650" y2="226" marker-end="url(#fleche)"/>
+    <line class="flux" x1="960" y1="175" x2="960" y2="226" marker-end="url(#fleche)"/>
+    <line class="flux" x1="1245" y1="175" x2="1245" y2="226" marker-end="url(#fleche)"/>
+    <!-- Démarrage → service -->
+    <line class="flux" x1="340" y1="421" x2="340" y2="596" marker-end="url(#fleche)"/>
+    <text x="350" y="512">démarre</text>
+    <!-- Porte 1 → service : vecteur du message -->
+    <polyline class="flux" points="530,571 530,665 484,665" marker-end="url(#fleche)"/>
+    <text x="538" y="628">vecteur du message</text>
+    <!-- Souvenirs → porte 1 -->
+    <line class="flux" x1="700" y1="838" x2="700" y2="574" marker-end="url(#fleche)"/>
+    <text x="708" y="716">lit les souvenirs</text>
+    <text x="708" y="733">des tiroirs ouverts</text>
+    <!-- Porte 2 et fin de session → worker -->
+    <line class="flux" x1="960" y1="421" x2="960" y2="596" marker-end="url(#fleche)"/>
+    <text x="968" y="512">réveille</text>
+    <line class="flux" x1="1245" y1="421" x2="1245" y2="596" marker-end="url(#fleche)"/>
+    <text x="1253" y="512">force la rédaction</text>
+    <!-- Worker ↔ base -->
+    <line class="flux" x1="860" y1="782" x2="860" y2="836" marker-end="url(#fleche)"/>
+    <text x="868" y="815">écrit</text>
+    <line class="flux" x1="1050" y1="838" x2="1050" y2="784" marker-end="url(#fleche)"/>
+    <text x="1058" y="815">lit l'inbox</text>
+    <line class="flux" x1="1280" y1="782" x2="1280" y2="836" marker-end="url(#fleche)"/>
+    <text x="1288" y="815">annonce</text>
+  </svg>
+  <!-- Chaîne interne du worker, au-dessus de sa carte -->
+  <svg width="1400" height="980" viewBox="0 0 1400 980" style="z-index: 4">
+    <line class="flux" x1="1083" y1="672" x2="1105" y2="672" marker-end="url(#fleche)"/>
+    <line class="flux" x1="1231" y1="695" x2="1231" y2="709" marker-end="url(#fleche)"/>
+    <line class="flux" x1="1107" y1="734" x2="1085" y2="734" marker-end="url(#fleche)"/>
+  </svg>
+
+  <!-- Les événements de la session -->
+  <div class="pastille" style="left: 200px; width: 280px">① Session ouverte</div>
+  <div class="pastille" style="left: 510px; width: 280px">② Vous envoyez un message</div>
+  <div class="pastille" style="left: 820px; width: 280px">③ Claude a répondu, avec les souvenirs injectés</div>
+  <div class="pastille" style="left: 1120px; width: 250px">④ Session fermée</div>
+
+  <!-- Les portes -->
+  <div class="carte" style="left: 200px; top: 230px; width: 280px; height: 190px">
+    <div class="entete"><h3>Démarrage</h3></div>
+    <div class="crochet">SessionStart</div>
+    <ul>
+      <li>bannière de santé (reprise de Kenjaku)</li>
+      <li>sonde <span class="jev">Jev</span> service, contradictions</li>
+      <li>préchauffe le modèle d'embeddings</li>
+    </ul>
+  </div>
+
+  <div class="carte porte" style="left: 510px; top: 230px; width: 280px; height: 340px">
+    <div class="entete"><h3>Porte 1 · le rappel</h3><span class="duree">≈ 0,65 s</span></div>
+    <div class="crochet">UserPromptSubmit</div>
+    <ol>
+      <li>masque les secrets, enregistre le message</li>
+      <li>relit les 2 échanges précédents, coupés à 300 caractères</li>
+      <li>ouvre les tiroirs utiles</li>
+      <li>recherche hybride, sens + mots : 12 candidats</li>
+      <li><span class="jev">Jev</span> besoin ? projet seul ? tiroirs ? pertinence ?</li>
+      <li>injecte au plus 5 souvenirs dans le contexte de Claude</li>
+    </ol>
+    <div class="note">Affiche aussi « 🧠 Capitalisé » et intercepte « faux » / « inutile ».</div>
+  </div>
+
+  <div class="carte porte" style="left: 820px; top: 230px; width: 280px; height: 190px">
+    <div class="entete"><h3>Porte 2 · la capture</h3><span class="duree">quelques ms</span></div>
+    <div class="crochet">Stop</div>
+    <ul>
+      <li>ajoute la réponse de Claude</li>
+      <li>dépose l'échange dans l'inbox</li>
+      <li>réveille le worker</li>
+    </ul>
+    <div class="note">Aucun appel réseau.</div>
+  </div>
+
+  <div class="carte" style="left: 1120px; top: 230px; width: 250px; height: 190px">
+    <div class="entete"><h3>Fin de session</h3></div>
+    <div class="crochet">SessionEnd</div>
+    <ul>
+      <li>tranche les échanges en attente</li>
+      <li>récupère les messages interrompus</li>
+      <li>force la rédaction du lot</li>
+    </ul>
+  </div>
+
+  <!-- Arrière-plan -->
+  <div class="carte" style="left: 200px; top: 600px; width: 280px; height: 130px">
+    <div class="entete"><h3>Service d'embeddings</h3></div>
+    <div class="crochet">127.0.0.1</div>
+    <ul>
+      <li>garde EmbeddingGemma en RAM</li>
+      <li>s'arrête après 30 min sans requête</li>
+    </ul>
+  </div>
+
+  <div class="carte" style="left: 820px; top: 600px; width: 550px; height: 180px">
+    <div class="entete"><h3>Worker · un seul à la fois</h3><span class="duree lent">en arrière-plan</span></div>
+  </div>
+  <div class="etape" style="left: 836px; top: 650px"><span class="jev">Jev</span>&nbsp;retenir, attendre la suite ou rejeter</div>
+  <div class="etape" style="left: 1109px; top: 650px"><span class="haiku">Haiku</span>&nbsp;rédige par lots, sans aucun outil</div>
+  <div class="etape" style="left: 1109px; top: 712px">calcule les vecteurs EmbeddingGemma</div>
+  <div class="etape" style="left: 836px; top: 712px">range dans les tiroirs et annonce</div>
+
+  <!-- La base locale -->
+  <div class="boite" style="left: 200px; width: 270px"><b>Journal et santé</b><span>cerveau.log · sante.json</span></div>
+  <div class="boite" style="left: 490px; width: 410px"><b>Souvenirs et tiroirs</b><span>une phrase, un type, une fiabilité, un univers, un tiroir · index plein texte FTS5 + vecteurs</span></div>
+  <div class="boite" style="left: 920px; width: 260px"><b>Inbox des échanges</b><span>en cours → à évaluer → en attente → à écrire</span></div>
+  <div class="boite" style="left: 1200px; width: 170px"><b>Annonces</b><span>montrées au message suivant</span></div>
+
+  <div class="legende">
+    <span><span class="jev">Jev</span> décision chiffrée, seuil appliqué par le code</span>
+    <span><span class="haiku">Haiku</span> rédaction des souvenirs</span>
+    <span style="color:#7fe3ff">⟶ flux de données</span>
+  </div>
+</body>
+</html>
