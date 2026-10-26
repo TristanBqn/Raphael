@@ -201,7 +201,7 @@ Adaptation directe ne veut pas dire copie : les deux projets ne répondent pas a
 | Qui décide | Claude propose une note (`/file-back`) ; **vous validez** | **Jev** juge chaque échange (retenir, attendre la suite, rejeter) ; vous n'êtes pas sollicité |
 | Qui écrit | Des scripts testés : la note est conforme par construction, puis commit et push automatiques | Haiku rédige ; le code range dans les tiroirs et évite les doublons |
 | Stockage | Notes Markdown + `[[wikilinks]]`, dans votre dépôt git | Base SQLite : souvenirs atomiques d'une phrase, datés, avec leur fiabilité et une date d'expiration éventuelle |
-| Correction | On édite les notes, dans Obsidian ou ailleurs | On répond `faux 2` ou `inutile` au message suivant |
+| Correction | En le disant à Claude dans la conversation : il corrige ou complète la note, à travers des garde-fous ; ou en éditant la note dans Obsidian | Une commande fixe, `faux 2` ou `inutile`, interceptée par la porte 1 : le souvenir est désactivé sans passer par Claude (0 token) |
 | **⚖️ Déterminisme** | | |
 | Toujours la même règle | L'écriture : garde-fous, scripts de construction, versionnement automatique | Le déclenchement et la décision : chaque échange est jugé au même moment, contre un seuil écrit dans le code |
 | Ce qui reste un jugement | Chercher ou retenir : c'est Claude qui y pense, et vous qui confirmez | La probabilité donnée par Jev (stable à quelques centièmes près) et la rédaction par Haiku |
