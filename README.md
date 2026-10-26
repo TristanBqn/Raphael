@@ -206,7 +206,7 @@ Adaptation directe ne veut pas dire copie : les deux projets ne répondent pas a
 | Toujours la même règle | L'écriture : garde-fous, scripts de construction, versionnement automatique | Le déclenchement et la décision : chaque échange est jugé au même moment, contre un seuil écrit dans le code |
 | Ce qui reste un jugement | Chercher ou retenir : c'est Claude qui y pense, et vous qui confirmez | La probabilité donnée par Jev (stable à quelques centièmes près) et la rédaction par Haiku |
 | **🧰 En pratique** | | |
-| Coût en contexte | Une constitution `CLAUDE.engine.md` (environ 60 Ko) chargée à chaque session | Rien au démarrage ; quelques lignes injectées seulement quand un souvenir sert |
+| Coût en contexte | Environ 27 000 tokens de constitution (`CLAUDE.md` + `CLAUDE.engine.md`, 66 Ko) dès le premier message, environ 32 000 avec les hooks et outils du cerveau ; puis les notes que Claude lit quand il cherche | Rien au démarrage ; à chaque message où un souvenir sert, quelques lignes injectées (de l'ordre de quelques centaines de tokens), qui s'additionnent au fil d'une longue session |
 | Pile | Node.js ≥ 20, macOS et Windows, installateur guidé | Python 3.14, Windows uniquement |
 | Public visé | Tout le monde, y compris sans profil technique | Utilisateurs de Claude Code à l'aise avec Python |
 | Maturité | Versions publiées, moteur qui se met à jour seul, tests de mutation, ADR | Projet personnel, sans tests automatisés |
