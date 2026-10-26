@@ -3,136 +3,295 @@
 <head>
 <meta charset="utf-8">
 <title>Les portes de Raphael</title>
-<!-- Source du diagramme assets/portes.png : capture à 1400 × 980 (navigateur headless, facteur 2). -->
+<!-- Source du diagramme assets/portes.png : capture à 1600 × 1150 (navigateur headless, facteur 2).
+     Palette reprise de l'abstraction de Raphael dans l'anime : cœur or lumineux, cercles de runes, fond sarcelle sombre. -->
 <style>
-  html, body { margin: 0; width: 1400px; height: 980px; overflow: hidden; }
+  html, body { margin: 0; width: 1600px; height: 1150px; overflow: hidden; }
   body {
     position: relative;
     font-family: "Segoe UI", "Noto Sans", "Helvetica Neue", Arial, sans-serif;
-    color: #eef8ff;
-    background: radial-gradient(ellipse at 30% 40%, #16244f 0%, #0a1230 55%, #050816 100%);
+    color: #f3ead2;
+    background:
+      radial-gradient(circle at 0% 100%, rgba(31, 150, 128, 0.28), transparent 38%),
+      radial-gradient(circle at 100% 0%, rgba(31, 150, 128, 0.22), transparent 36%),
+      radial-gradient(circle at 50% 40%, #2c1f07 0%, #0e1612 42%, #04100d 72%, #020605 100%);
   }
-  .titre { position: absolute; left: 30px; top: 22px; }
-  .titre h1 { margin: 0; font-size: 30px; letter-spacing: 3px;
-              background: linear-gradient(90deg, #e9fbff, #7fe3ff); -webkit-background-clip: text; color: transparent; }
-  .titre p { margin: 4px 0 0; font-size: 15px; color: #9fb8dd; }
+  .titre { position: absolute; left: 30px; top: 20px; z-index: 2; }
+  .titre h1 { margin: 0; font-size: 32px; letter-spacing: 3px;
+              background: linear-gradient(90deg, #fff6dc, #ffc94a); -webkit-background-clip: text; color: transparent; }
+  .titre p { margin: 4px 0 0; font-size: 16px; color: #b9cfc4; }
+  .titre p b { color: #ffd76a; font-weight: 600; }
 
-  .couloir { position: absolute; left: 24px; width: 150px; font-size: 12px; font-weight: 700; letter-spacing: 2px;
-             text-transform: uppercase; color: #7f97c4; border-left: 3px solid #5ee7ff; padding-left: 10px; line-height: 1.4; }
-  .couloir span { display: block; font-weight: 400; letter-spacing: 0; text-transform: none; font-size: 12px; color: #6b81ad; }
-  .separation { position: absolute; left: 24px; right: 24px; border-top: 1px dashed rgba(94, 231, 255, 0.15); }
+  .pastille { position: absolute; top: 104px; height: 42px; z-index: 2; box-sizing: border-box; border-radius: 21px;
+              display: flex; align-items: center; justify-content: center; text-align: center; padding: 0 14px;
+              font-size: 15px; font-weight: 600; background: #0d211d; border: 1.5px solid rgba(255, 201, 74, 0.5); }
 
-  .pastille { position: absolute; top: 118px; height: 56px; z-index: 2; box-sizing: border-box; border-radius: 28px;
-              display: flex; align-items: center; justify-content: center; text-align: center; padding: 0 16px;
-              font-size: 15px; font-weight: 600; background: #13214a; border: 1.5px solid rgba(185, 216, 255, 0.45); }
+  /* Texte gravé dans les portes */
+  .dans-porte { position: absolute; z-index: 2; box-sizing: border-box; text-align: left; }
+  .fronton { text-align: center; }
+  .fronton h2 { margin: 0; font-size: 22px; letter-spacing: 4px; color: #fff6dc; text-shadow: 0 0 12px rgba(255, 201, 74, 0.8); }
+  .fronton .role { font-size: 15px; letter-spacing: 1px; color: #ffd76a; font-weight: 600; }
+  .fronton.petit h2 { font-size: 16.5px; letter-spacing: 2px; text-shadow: 0 0 10px rgba(47, 199, 173, 0.7); }
+  .infos { display: flex; justify-content: center; gap: 8px; align-items: center; margin-top: 5px; }
+  .crochet { font-family: Consolas, "Cascadia Mono", monospace; font-size: 12px; color: #b9cfc4; }
+  .duree { font-size: 11.5px; font-weight: 700; color: #1a1103; background: #ffc94a; border-radius: 10px; padding: 2px 7px;
+           white-space: nowrap; }
+  .duree.lent { background: #3fd1b8; color: #04110e; }
+  .dans-porte ol, .dans-porte ul, .carte ul { margin: 12px 0 0; padding-left: 22px; font-size: 13.5px; line-height: 1.38; color: #f3ead2; }
+  .dans-porte li { margin-bottom: 6px; }
+  .dans-porte li.cle { background: rgba(255, 201, 74, 0.14); border-radius: 6px; padding: 3px 6px; margin-left: -6px;
+                       box-shadow: inset 3px 0 0 #ffc94a; }
+  .dans-porte.petite ul { font-size: 12.5px; margin-top: 10px; padding-left: 18px; }
+  .note { margin-top: 8px; font-size: 12.5px; color: #c9bfa0; line-height: 1.35; }
 
   .carte { position: absolute; z-index: 2; box-sizing: border-box; border-radius: 14px; padding: 12px 16px;
-           background: linear-gradient(135deg, rgba(94, 231, 255, 0.13), rgba(58, 123, 255, 0.05)), #0b1533;
-           border: 1.5px solid rgba(94, 231, 255, 0.65); box-shadow: 0 0 18px rgba(94, 231, 255, 0.12); }
-  .carte.porte { border-color: #5ee7ff; box-shadow: 0 0 24px rgba(94, 231, 255, 0.28); }
+           background: linear-gradient(135deg, rgba(47, 199, 173, 0.13), rgba(255, 201, 74, 0.05)), #08181a;
+           border: 1.5px solid rgba(47, 199, 173, 0.6); box-shadow: 0 0 18px rgba(47, 199, 173, 0.14); }
   .entete { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
-  .carte h3 { margin: 0; font-size: 16.5px; color: #7fe3ff; white-space: nowrap; }
-  .crochet { font-family: Consolas, "Cascadia Mono", monospace; font-size: 12px; color: #9fb8dd; margin-top: 2px; }
-  .duree { font-size: 11.5px; font-weight: 700; color: #050816; background: #7fe3ff; border-radius: 10px; padding: 2px 7px;
-           white-space: nowrap; }
-  .duree.lent { background: #b9a3ff; }
-  .carte ul, .carte ol { margin: 8px 0 0; padding-left: 20px; font-size: 13.5px; line-height: 1.38; color: #dbe9ff; }
-  .carte li { margin-bottom: 3px; }
-  .carte .note { margin-top: 6px; font-size: 12.5px; color: #9fb8dd; }
+  .carte h3 { margin: 0; font-size: 16.5px; color: #ffd76a; white-space: nowrap; }
+  .carte .crochet { margin-top: 2px; }
+  .carte p { margin: 8px 0 0; font-size: 13.5px; line-height: 1.4; color: #f3ead2; }
+
+  .claude { text-align: center; padding: 22px 14px; border-color: #fff6dc;
+            background: radial-gradient(circle at 50% 30%, rgba(255, 215, 106, 0.18), transparent 70%), #0b1714;
+            box-shadow: 0 0 30px rgba(255, 215, 106, 0.3); }
+  .claude h3 { color: #fff6dc; font-size: 19px; }
+  .claude p { font-size: 14px; }
+  .claude .boucle { margin-top: 16px; font-size: 12.5px; color: #b9cfc4; border-top: 1px dashed rgba(255, 215, 106, 0.35);
+                    padding-top: 10px; line-height: 1.4; }
 
   .jev, .haiku { display: inline-block; font-size: 11.5px; font-weight: 700; border-radius: 6px; padding: 0 6px;
-                 margin-right: 4px; color: #050816; }
-  .jev { background: #5ee7ff; }
-  .haiku { background: #b9a3ff; }
+                 margin-right: 4px; color: #1a1103; }
+  .jev { background: #ffc94a; }
+  .haiku { background: #3fd1b8; color: #04110e; }
 
-  .etape { position: absolute; z-index: 3; box-sizing: border-box; width: 245px; height: 44px; border-radius: 10px;
-           display: flex; align-items: center; padding: 0 10px; font-size: 13px; line-height: 1.25;
-           background: rgba(10, 18, 48, 0.9); border: 1px solid rgba(94, 231, 255, 0.45); }
+  .etape { position: absolute; z-index: 3; box-sizing: border-box; width: 398px; height: 30px; border-radius: 8px;
+           display: flex; align-items: center; padding: 0 10px; font-size: 13px;
+           background: rgba(6, 16, 14, 0.9); border: 1px solid rgba(255, 201, 74, 0.4); }
 
-  .boite { position: absolute; z-index: 2; top: 840px; height: 84px; box-sizing: border-box; border-radius: 12px;
-           padding: 10px 14px; background: #0e1838; border: 1.5px solid rgba(185, 216, 255, 0.35); }
-  .boite b { display: block; font-size: 14.5px; color: #eef8ff; }
-  .boite span { display: block; font-size: 12.5px; color: #9fb8dd; margin-top: 3px; line-height: 1.35; }
+  .zone { position: absolute; z-index: 2; }
+  .zone b { display: block; font-size: 13px; font-weight: 700; letter-spacing: 3px; color: #c9a24a; }
+  .zone span { display: block; font-size: 12.5px; color: #7fa59a; margin-top: 2px; }
 
-  .legende { position: absolute; left: 200px; top: 944px; font-size: 13px; color: #9fb8dd; display: flex; gap: 22px;
-             align-items: center; }
+  .boite { position: absolute; z-index: 2; top: 950px; height: 136px; box-sizing: border-box; border-radius: 12px;
+           padding: 10px 14px; background: #0a1715; border: 1.5px solid rgba(255, 201, 74, 0.32); }
+  .boite b { display: block; font-size: 14.5px; color: #fff6dc; }
+  .boite span { display: block; font-size: 12.5px; color: #b9cfc4; margin-top: 3px; line-height: 1.4; }
+  .boite span em { font-style: normal; color: #ffd76a; }
+
+  .legende { position: absolute; left: 30px; top: 1112px; font-size: 13px; color: #b9cfc4; display: flex; gap: 24px;
+             align-items: center; z-index: 2; }
 
   svg { position: absolute; left: 0; top: 0; z-index: 1; }
-  svg .flux { stroke: #7fe3ff; stroke-width: 2; fill: none; }
-  svg .temps { stroke: rgba(185, 216, 255, 0.35); stroke-width: 2; fill: none; }
-  svg text { font-family: "Segoe UI", Arial, sans-serif; font-size: 13px; fill: #b9d8ff; font-style: italic; }
+  svg .flux { stroke: #ffcf5a; stroke-width: 2; fill: none; }
+  svg .temps { stroke: rgba(255, 215, 106, 0.35); stroke-width: 2; fill: none; }
+  svg text { font-family: "Segoe UI", Arial, sans-serif; font-size: 13px; fill: #e8d9a8; font-style: italic; }
+  svg .chiffre { font-style: normal; font-weight: 700; font-size: 20px; fill: #fff6dc; text-anchor: middle; }
+  svg .niveau { font-style: normal; font-size: 12px; fill: #f3ead2; text-anchor: middle; }
+  svg .niveau tspan.n { fill: #ffd76a; font-weight: 700; }
 </style>
 </head>
 <body>
   <div class="titre">
     <h1>LES PORTES DE RAPHAEL</h1>
-    <p>Ce qui se passe à chaque événement d'une session Claude Code</p>
+    <p>Chaque message franchit deux portes : <b>la porte 1 rappelle</b> ce qui sert, <b>la porte 2 dépose</b> l'échange pour qu'il soit retenu en coulisses.</p>
   </div>
 
-  <div class="couloir" style="top: 128px">Vous et Claude<span>la conversation</span></div>
-  <div class="couloir" style="top: 370px">Portes<span>hooks synchrones</span></div>
-  <div class="couloir" style="top: 665px">Arrière-plan<span>sans bloquer</span></div>
-  <div class="couloir" style="top: 862px">Base locale<span>SQLite</span></div>
-  <div class="separation" style="top: 206px"></div>
-  <div class="separation" style="top: 587px"></div>
-  <div class="separation" style="top: 808px"></div>
-
-  <svg width="1400" height="980" viewBox="0 0 1400 980">
+  <svg width="1600" height="1150" viewBox="0 0 1600 1150">
     <defs>
       <marker id="fleche" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-        <path d="M0 0 L10 5 L0 10 Z" fill="#7fe3ff"/>
+        <path d="M0 0 L10 5 L0 10 Z" fill="#ffcf5a"/>
       </marker>
       <marker id="fleche-temps" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
-        <path d="M0 0 L10 5 L0 10 Z" fill="rgba(185,216,255,0.6)"/>
+        <path d="M0 0 L10 5 L0 10 Z" fill="rgba(255,215,106,0.6)"/>
       </marker>
+      <linearGradient id="cadre" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#ffd76a"/>
+        <stop offset="0.45" stop-color="#c0821f"/>
+        <stop offset="1" stop-color="#5a3a0c"/>
+      </linearGradient>
+      <linearGradient id="cadre-discret" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#1f6e62"/>
+        <stop offset="1" stop-color="#0b2c27"/>
+      </linearGradient>
+      <linearGradient id="seuil" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#0e0a03"/>
+        <stop offset="0.6" stop-color="#1d1406"/>
+        <stop offset="1" stop-color="#4a3008"/>
+      </linearGradient>
+      <linearGradient id="seuil-discret" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#06120f"/>
+        <stop offset="1" stop-color="#0f3029"/>
+      </linearGradient>
+      <radialGradient id="lumiere" cx="0.5" cy="1" r="0.7">
+        <stop offset="0" stop-color="#ffe08a" stop-opacity="0.5"/>
+        <stop offset="1" stop-color="#ffc94a" stop-opacity="0"/>
+      </radialGradient>
+      <linearGradient id="vantail" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0" stop-color="#4a3410"/>
+        <stop offset="1" stop-color="#1c1305"/>
+      </linearGradient>
+      <linearGradient id="vantail-d" x1="1" y1="0" x2="0" y2="0">
+        <stop offset="0" stop-color="#4a3410"/>
+        <stop offset="1" stop-color="#1c1305"/>
+      </linearGradient>
+      <linearGradient id="sol" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0" stop-color="#ffc94a" stop-opacity="0"/>
+        <stop offset="0.5" stop-color="#ffc94a" stop-opacity="0.6"/>
+        <stop offset="1" stop-color="#ffc94a" stop-opacity="0"/>
+      </linearGradient>
+      <linearGradient id="flaque" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#ffd76a" stop-opacity="0.32"/>
+        <stop offset="1" stop-color="#ffd76a" stop-opacity="0"/>
+      </linearGradient>
+      <radialGradient id="coeur" cx="0.5" cy="0.5" r="0.5">
+        <stop offset="0" stop-color="#ffe08a" stop-opacity="0.22"/>
+        <stop offset="1" stop-color="#ffc94a" stop-opacity="0"/>
+      </radialGradient>
+      <filter id="lueur" x="-20%" y="-20%" width="140%" height="140%">
+        <feGaussianBlur stdDeviation="7" result="flou"/>
+        <feMerge><feMergeNode in="flou"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+      <g id="rune"><path d="M0 -4 L3 0 L0 4 L-3 0 Z" fill="#ffe08a" opacity="0.85"/></g>
     </defs>
-    <!-- Le fil du temps -->
-    <line class="temps" x1="190" y1="146" x2="1388" y2="146" marker-end="url(#fleche-temps)"/>
-    <!-- Événements → portes -->
-    <line class="flux" x1="340" y1="175" x2="340" y2="226" marker-end="url(#fleche)"/>
-    <line class="flux" x1="650" y1="175" x2="650" y2="226" marker-end="url(#fleche)"/>
-    <line class="flux" x1="960" y1="175" x2="960" y2="226" marker-end="url(#fleche)"/>
-    <line class="flux" x1="1245" y1="175" x2="1245" y2="226" marker-end="url(#fleche)"/>
+
+    <!-- Fond : cercle de runes et rayons autour de Claude, comme le cœur de Raphael -->
+    <circle cx="800" cy="455" r="330" fill="url(#coeur)"/>
+    <g fill="none" stroke="#ffc94a">
+      <circle cx="800" cy="455" r="150" stroke-opacity="0.16"/>
+      <circle cx="800" cy="455" r="190" stroke-opacity="0.12" stroke-width="7" stroke-dasharray="3 5 9 4 2 6"/>
+      <circle cx="800" cy="455" r="228" stroke-opacity="0.1"/>
+      <circle cx="800" cy="455" r="300" stroke-opacity="0.07" stroke-width="10" stroke-dasharray="2 7 12 5 4 9"/>
+      <circle cx="800" cy="455" r="340" stroke-opacity="0.06"/>
+    </g>
+    <g id="rayons" stroke="#ffe08a" stroke-opacity="0.06" stroke-width="1.5"></g>
+
+    <!-- Le fil du temps de la session -->
+    <line class="temps" x1="20" y1="125" x2="1585" y2="125" marker-end="url(#fleche-temps)"/>
+    <line class="flux" x1="140" y1="147" x2="140" y2="322" marker-end="url(#fleche)"/>
+    <line class="flux" x1="480" y1="147" x2="480" y2="162" marker-end="url(#fleche)"/>
+    <line class="flux" x1="1120" y1="147" x2="1120" y2="162" marker-end="url(#fleche)"/>
+    <line class="flux" x1="1470" y1="147" x2="1470" y2="322" marker-end="url(#fleche)"/>
+
+    <!-- Le sol du couloir -->
+    <line x1="10" y1="641" x2="1590" y2="641" stroke="url(#sol)" stroke-width="2"/>
+    <polygon points="326,642 634,642 690,670 270,670" fill="url(#flaque)"/>
+    <polygon points="966,642 1274,642 1330,670 910,670" fill="url(#flaque)"/>
+
+    <!-- Démarrage : petite porte d'entrée -->
+    <path d="M30,640 L30,380 A110,52 0 0 1 250,380 L250,640 Z" fill="url(#cadre-discret)" stroke="rgba(47,199,173,0.6)" stroke-width="1.5"/>
+    <path d="M40,640 L40,382 A100,45 0 0 1 240,382 L240,640 Z" fill="url(#seuil-discret)" stroke="rgba(63,209,184,0.5)" stroke-width="1"/>
+
+    <!-- Fin de session : petite porte de sortie -->
+    <path d="M1360,640 L1360,380 A110,52 0 0 1 1580,380 L1580,640 Z" fill="url(#cadre-discret)" stroke="rgba(47,199,173,0.6)" stroke-width="1.5"/>
+    <path d="M1370,640 L1370,382 A100,45 0 0 1 1570,382 L1570,640 Z" fill="url(#seuil-discret)" stroke="rgba(63,209,184,0.5)" stroke-width="1"/>
+
+    <!-- Porte 1 : vantaux ouverts, cadre doré, seuil lumineux, clé de voûte -->
+    <g>
+      <polygon points="310,292 272,268 272,664 310,640" fill="url(#vantail)" stroke="#ffc94a" stroke-opacity="0.7" stroke-width="1.5"/>
+      <polygon points="303,308 279,293 279,452 303,462" fill="none" stroke="#ffc94a" stroke-opacity="0.4"/>
+      <polygon points="303,480 279,471 279,640 303,630" fill="none" stroke="#ffc94a" stroke-opacity="0.4"/>
+      <polygon points="650,292 688,268 688,664 650,640" fill="url(#vantail-d)" stroke="#ffc94a" stroke-opacity="0.7" stroke-width="1.5"/>
+      <polygon points="657,308 681,293 681,452 657,462" fill="none" stroke="#ffc94a" stroke-opacity="0.4"/>
+      <polygon points="657,480 681,471 681,640 657,630" fill="none" stroke="#ffc94a" stroke-opacity="0.4"/>
+      <path d="M310,640 L310,282 A170,97 0 0 1 650,282 L650,640 Z" fill="url(#cadre)" stroke="#ffd76a" stroke-width="2" filter="url(#lueur)"/>
+      <path d="M326,640 L326,284 A154,84 0 0 1 634,284 L634,640 Z" fill="url(#seuil)" stroke="#ffe08a" stroke-width="1.5"/>
+      <path d="M326,640 L326,284 A154,84 0 0 1 634,284 L634,640 Z" fill="url(#lumiere)"/>
+      <use href="#rune" x="318" y="320"/><use href="#rune" x="318" y="400"/><use href="#rune" x="318" y="480"/><use href="#rune" x="318" y="560"/>
+      <use href="#rune" x="642" y="320"/><use href="#rune" x="642" y="400"/><use href="#rune" x="642" y="480"/><use href="#rune" x="642" y="560"/>
+      <circle cx="480" cy="186" r="21" fill="#120c02" stroke="#ffe08a" stroke-width="2.5" filter="url(#lueur)"/>
+      <text class="chiffre" x="480" y="193">1</text>
+    </g>
+
+    <!-- Porte 2 -->
+    <g>
+      <polygon points="950,292 912,268 912,664 950,640" fill="url(#vantail)" stroke="#ffc94a" stroke-opacity="0.7" stroke-width="1.5"/>
+      <polygon points="943,308 919,293 919,452 943,462" fill="none" stroke="#ffc94a" stroke-opacity="0.4"/>
+      <polygon points="943,480 919,471 919,640 943,630" fill="none" stroke="#ffc94a" stroke-opacity="0.4"/>
+      <polygon points="1290,292 1328,268 1328,664 1290,640" fill="url(#vantail-d)" stroke="#ffc94a" stroke-opacity="0.7" stroke-width="1.5"/>
+      <polygon points="1297,308 1321,293 1321,452 1297,462" fill="none" stroke="#ffc94a" stroke-opacity="0.4"/>
+      <polygon points="1297,480 1321,471 1321,640 1297,630" fill="none" stroke="#ffc94a" stroke-opacity="0.4"/>
+      <path d="M950,640 L950,282 A170,97 0 0 1 1290,282 L1290,640 Z" fill="url(#cadre)" stroke="#ffd76a" stroke-width="2" filter="url(#lueur)"/>
+      <path d="M966,640 L966,284 A154,84 0 0 1 1274,284 L1274,640 Z" fill="url(#seuil)" stroke="#ffe08a" stroke-width="1.5"/>
+      <path d="M966,640 L966,284 A154,84 0 0 1 1274,284 L1274,640 Z" fill="url(#lumiere)"/>
+      <use href="#rune" x="958" y="320"/><use href="#rune" x="958" y="400"/><use href="#rune" x="958" y="480"/><use href="#rune" x="958" y="560"/>
+      <use href="#rune" x="1282" y="320"/><use href="#rune" x="1282" y="400"/><use href="#rune" x="1282" y="480"/><use href="#rune" x="1282" y="560"/>
+      <circle cx="1120" cy="186" r="21" fill="#120c02" stroke="#ffe08a" stroke-width="2.5" filter="url(#lueur)"/>
+      <text class="chiffre" x="1120" y="193">2</text>
+    </g>
+
+    <!-- L'échange qui tombe dans l'inbox, au seuil de la porte 2 -->
+    <g transform="translate(1120 548)">
+      <rect x="-34" y="-22" width="68" height="44" rx="5" fill="#120c02" stroke="#ffe08a" stroke-width="2" filter="url(#lueur)"/>
+      <polyline points="-34,-20 0,6 34,-20" fill="none" stroke="#ffe08a" stroke-width="2"/>
+    </g>
+    <text x="1120" y="594" text-anchor="middle">l'échange : votre message + la réponse</text>
+    <line class="flux" x1="1120" y1="602" x2="1120" y2="634" stroke-dasharray="4 4" marker-end="url(#fleche)"/>
+
+    <!-- Porte 1 → Claude → porte 2 -->
+    <line class="flux" x1="652" y1="455" x2="696" y2="455" marker-end="url(#fleche)" stroke-width="2.5"/>
+    <line class="flux" x1="904" y1="455" x2="948" y2="455" marker-end="url(#fleche)" stroke-width="2.5"/>
+
     <!-- Démarrage → service -->
-    <line class="flux" x1="340" y1="421" x2="340" y2="596" marker-end="url(#fleche)"/>
-    <text x="350" y="512">démarre</text>
+    <line class="flux" x1="140" y1="642" x2="140" y2="698" marker-end="url(#fleche)"/>
+    <text x="150" y="676">démarre</text>
     <!-- Porte 1 → service : vecteur du message -->
-    <polyline class="flux" points="530,571 530,665 484,665" marker-end="url(#fleche)"/>
-    <text x="538" y="628">vecteur du message</text>
+    <polyline class="flux" points="372,642 372,800 294,800" marker-end="url(#fleche)"/>
+    <text x="382" y="760">vecteur du message</text>
     <!-- Souvenirs → porte 1 -->
-    <line class="flux" x1="700" y1="838" x2="700" y2="574" marker-end="url(#fleche)"/>
-    <text x="708" y="716">lit les souvenirs</text>
-    <text x="708" y="733">des tiroirs ouverts</text>
-    <!-- Porte 2 et fin de session → worker -->
-    <line class="flux" x1="960" y1="421" x2="960" y2="596" marker-end="url(#fleche)"/>
-    <text x="968" y="512">réveille</text>
-    <line class="flux" x1="1245" y1="421" x2="1245" y2="596" marker-end="url(#fleche)"/>
-    <text x="1253" y="512">force la rédaction</text>
-    <!-- Worker ↔ base -->
-    <line class="flux" x1="860" y1="782" x2="860" y2="836" marker-end="url(#fleche)"/>
-    <text x="868" y="815">écrit</text>
-    <line class="flux" x1="1050" y1="838" x2="1050" y2="784" marker-end="url(#fleche)"/>
-    <text x="1058" y="815">lit l'inbox</text>
-    <line class="flux" x1="1280" y1="782" x2="1280" y2="836" marker-end="url(#fleche)"/>
-    <text x="1288" y="815">annonce</text>
+    <line class="flux" x1="560" y1="948" x2="560" y2="646" marker-end="url(#fleche)"/>
+    <text x="570" y="860">lit les souvenirs</text>
+    <text x="570" y="877">des tiroirs ouverts</text>
+    <!-- Porte 2 → inbox, porte 2 et fin de session → worker -->
+    <line class="flux" x1="1000" y1="642" x2="1000" y2="698" marker-end="url(#fleche)"/>
+    <text x="1010" y="686">dépose l'échange</text>
+    <line class="flux" x1="1240" y1="642" x2="1240" y2="698" marker-end="url(#fleche)"/>
+    <text x="1250" y="686">réveille</text>
+    <line class="flux" x1="1470" y1="642" x2="1470" y2="698" marker-end="url(#fleche)"/>
+    <text x="1458" y="686" text-anchor="end">force la rédaction</text>
+    <!-- Inbox → worker -->
+    <line class="flux" x1="1112" y1="790" x2="1148" y2="790" marker-end="url(#fleche)"/>
+    <text x="1118" y="780">lit</text>
+    <!-- Worker → base -->
+    <line class="flux" x1="1180" y1="902" x2="1180" y2="948" marker-end="url(#fleche)"/>
+    <text x="1190" y="930">écrit</text>
+    <line class="flux" x1="1450" y1="902" x2="1450" y2="948" marker-end="url(#fleche)"/>
+    <text x="1460" y="930">annonce</text>
   </svg>
-  <!-- Chaîne interne du worker, au-dessus de sa carte -->
-  <svg width="1400" height="980" viewBox="0 0 1400 980" style="z-index: 4">
-    <line class="flux" x1="1083" y1="672" x2="1105" y2="672" marker-end="url(#fleche)"/>
-    <line class="flux" x1="1231" y1="695" x2="1231" y2="709" marker-end="url(#fleche)"/>
-    <line class="flux" x1="1107" y1="734" x2="1085" y2="734" marker-end="url(#fleche)"/>
+
+  <!-- Au-dessus des cartes : chaîne interne du worker et entonnoir des tiroirs -->
+  <svg width="1600" height="1150" viewBox="0 0 1600 1150" style="z-index: 4">
+    <line class="flux" x1="1545" y1="773" x2="1545" y2="779" marker-end="url(#fleche)"/>
+    <line class="flux" x1="1545" y1="811" x2="1545" y2="817" marker-end="url(#fleche)"/>
+    <line class="flux" x1="1545" y1="849" x2="1545" y2="855" marker-end="url(#fleche)"/>
+
+    <!-- Entonnoir : chaque souvenir descend la hiérarchie jusqu'au tiroir le plus précis -->
+    <g>
+      <polygon points="770,960 1150,960 1124,988 796,988" fill="rgba(255,201,74,0.14)" stroke="rgba(255,201,74,0.6)"/>
+      <polygon points="800,992 1120,992 1094,1020 826,1020" fill="rgba(255,201,74,0.2)" stroke="rgba(255,201,74,0.7)"/>
+      <polygon points="830,1024 1090,1024 1064,1052 856,1052" fill="rgba(255,201,74,0.28)" stroke="rgba(255,201,74,0.8)"/>
+      <text class="niveau" x="960" y="978"><tspan class="n">1</tspan>  racine : vous, perso ou un client</text>
+      <text class="niveau" x="960" y="1010"><tspan class="n">2</tspan>  sujet</text>
+      <text class="niveau" x="960" y="1042"><tspan class="n">3</tspan>  sous-sujet, et ainsi de suite</text>
+      <!-- Le tiroir d'arrivée -->
+      <rect x="900" y="1056" width="120" height="27" rx="4" fill="#120c02" stroke="#ffe08a" stroke-width="1.5" filter="url(#lueur)"/>
+      <rect x="946" y="1077" width="28" height="3" rx="1.5" fill="#ffe08a"/>
+      <text class="niveau" x="960" y="1072" style="font-size: 10.5px">tiroir le plus précis</text>
+      <!-- Un souvenir qui entre dans l'entonnoir -->
+      <circle cx="1170" cy="972" r="5" fill="#ffe08a" filter="url(#lueur)"/>
+      <path d="M1170 980 C 1180 1020, 1080 1050, 1026 1066" stroke="#ffe08a" stroke-width="1.5" fill="none" stroke-dasharray="3 4" marker-end="url(#fleche)"/>
+    </g>
   </svg>
 
   <!-- Les événements de la session -->
-  <div class="pastille" style="left: 200px; width: 280px">① Session ouverte</div>
-  <div class="pastille" style="left: 510px; width: 280px">② Vous envoyez un message</div>
-  <div class="pastille" style="left: 820px; width: 280px">③ Claude a répondu, avec les souvenirs injectés</div>
-  <div class="pastille" style="left: 1120px; width: 250px">④ Session fermée</div>
+  <div class="pastille" style="left: 40px; width: 200px">① Session ouverte</div>
+  <div class="pastille" style="left: 345px; width: 270px">② Vous envoyez un message</div>
+  <div class="pastille" style="left: 985px; width: 270px">③ Claude a répondu</div>
+  <div class="pastille" style="left: 1370px; width: 200px">④ Session fermée</div>
 
-  <!-- Les portes -->
-  <div class="carte" style="left: 200px; top: 230px; width: 280px; height: 190px">
-    <div class="entete"><h3>Démarrage</h3></div>
-    <div class="crochet">SessionStart</div>
+  <!-- Démarrage -->
+  <div class="dans-porte petite" style="left: 48px; top: 352px; width: 184px">
+    <div class="fronton petit"><h2>DÉMARRAGE</h2><div class="infos"><span class="crochet">SessionStart</span></div></div>
     <ul>
       <li>bannière de santé (reprise de Kenjaku)</li>
       <li>sonde <span class="jev">Jev</span> service, contradictions</li>
@@ -140,34 +299,49 @@
     </ul>
   </div>
 
-  <div class="carte porte" style="left: 510px; top: 230px; width: 280px; height: 340px">
-    <div class="entete"><h3>Porte 1 · le rappel</h3><span class="duree">≈ 0,65 s</span></div>
-    <div class="crochet">UserPromptSubmit</div>
+  <!-- Porte 1 -->
+  <div class="dans-porte" style="left: 338px; top: 228px; width: 284px">
+    <div class="fronton">
+      <h2>PORTE 1</h2>
+      <div class="role">le rappel</div>
+      <div class="infos"><span class="crochet">UserPromptSubmit</span><span class="duree">≈ 0,65 s</span></div>
+    </div>
     <ol>
       <li>masque les secrets, enregistre le message</li>
       <li>relit les 2 échanges précédents, coupés à 300 caractères</li>
       <li>ouvre les tiroirs utiles</li>
       <li>recherche hybride, sens + mots : 12 candidats</li>
-      <li><span class="jev">Jev</span> besoin ? projet seul ? tiroirs ? pertinence ?</li>
+      <li class="cle"><span class="jev">Jev</span> estime la probabilité, de 0 à 1, que chaque souvenir corresponde au message ; le code garde ceux qui passent le seuil</li>
       <li>injecte au plus 5 souvenirs dans le contexte de Claude</li>
     </ol>
     <div class="note">Affiche aussi « 🧠 Capitalisé » et intercepte « faux » / « inutile ».</div>
   </div>
 
-  <div class="carte porte" style="left: 820px; top: 230px; width: 280px; height: 190px">
-    <div class="entete"><h3>Porte 2 · la capture</h3><span class="duree">quelques ms</span></div>
-    <div class="crochet">Stop</div>
+  <!-- Claude, au cœur du cercle -->
+  <div class="carte claude" style="left: 700px; top: 370px; width: 202px; height: 172px">
+    <h3>Claude</h3>
+    <p>injection des souvenirs dans le contexte</p>
+    <div class="boucle">↻ à chaque message, on repasse par les deux portes</div>
+  </div>
+
+  <!-- Porte 2 -->
+  <div class="dans-porte" style="left: 978px; top: 228px; width: 284px">
+    <div class="fronton">
+      <h2>PORTE 2</h2>
+      <div class="role">la capture</div>
+      <div class="infos"><span class="crochet">Stop</span><span class="duree">quelques ms</span></div>
+    </div>
     <ul>
       <li>ajoute la réponse de Claude</li>
       <li>dépose l'échange dans l'inbox</li>
       <li>réveille le worker</li>
     </ul>
-    <div class="note">Aucun appel réseau.</div>
+    <div class="note">Aucun appel réseau : la porte se referme aussitôt, l'échange est jugé et rédigé en coulisses.</div>
   </div>
 
-  <div class="carte" style="left: 1120px; top: 230px; width: 250px; height: 190px">
-    <div class="entete"><h3>Fin de session</h3></div>
-    <div class="crochet">SessionEnd</div>
+  <!-- Fin de session -->
+  <div class="dans-porte petite" style="left: 1378px; top: 352px; width: 184px">
+    <div class="fronton petit"><h2>FIN DE SESSION</h2><div class="infos"><span class="crochet">SessionEnd</span></div></div>
     <ul>
       <li>tranche les échanges en attente</li>
       <li>récupère les messages interrompus</li>
@@ -175,8 +349,10 @@
     </ul>
   </div>
 
-  <!-- Arrière-plan -->
-  <div class="carte" style="left: 200px; top: 600px; width: 280px; height: 130px">
+  <!-- Les coulisses -->
+  <div class="zone" style="left: 620px; top: 706px"><b>LES COULISSES</b><span>en arrière-plan, sans bloquer la conversation</span></div>
+
+  <div class="carte" style="left: 30px; top: 700px; width: 262px; height: 140px">
     <div class="entete"><h3>Service d'embeddings</h3></div>
     <div class="crochet">127.0.0.1</div>
     <ul>
@@ -185,24 +361,47 @@
     </ul>
   </div>
 
-  <div class="carte" style="left: 820px; top: 600px; width: 550px; height: 180px">
+  <div class="carte" style="left: 870px; top: 700px; width: 242px; height: 160px">
+    <div class="entete"><h3>Inbox des échanges</h3></div>
+    <p>la file d'attente du worker :<br>en cours → à évaluer → en attente → à écrire</p>
+  </div>
+
+  <div class="carte" style="left: 1150px; top: 700px; width: 430px; height: 202px">
     <div class="entete"><h3>Worker · un seul à la fois</h3><span class="duree lent">en arrière-plan</span></div>
   </div>
-  <div class="etape" style="left: 836px; top: 650px"><span class="jev">Jev</span>&nbsp;retenir, attendre la suite ou rejeter</div>
-  <div class="etape" style="left: 1109px; top: 650px"><span class="haiku">Haiku</span>&nbsp;rédige par lots, sans aucun outil</div>
-  <div class="etape" style="left: 1109px; top: 712px">calcule les vecteurs EmbeddingGemma</div>
-  <div class="etape" style="left: 836px; top: 712px">range dans les tiroirs et annonce</div>
+  <div class="etape" style="left: 1166px; top: 742px"><span class="jev">Jev</span>&nbsp;retenir, attendre la suite ou rejeter</div>
+  <div class="etape" style="left: 1166px; top: 780px"><span class="haiku">Haiku</span>&nbsp;rédige par lots, sans aucun outil</div>
+  <div class="etape" style="left: 1166px; top: 818px">calcule les vecteurs EmbeddingGemma</div>
+  <div class="etape" style="left: 1166px; top: 856px">range dans les tiroirs et annonce</div>
 
-  <!-- La base locale -->
-  <div class="boite" style="left: 200px; width: 270px"><b>Journal et santé</b><span>cerveau.log · sante.json</span></div>
-  <div class="boite" style="left: 490px; width: 410px"><b>Souvenirs et tiroirs</b><span>une phrase, un type, une fiabilité, un univers, un tiroir · index plein texte FTS5 + vecteurs</span></div>
-  <div class="boite" style="left: 920px; width: 260px"><b>Inbox des échanges</b><span>en cours → à évaluer → en attente → à écrire</span></div>
-  <div class="boite" style="left: 1200px; width: 170px"><b>Annonces</b><span>montrées au message suivant</span></div>
+  <!-- La mémoire -->
+  <div class="zone" style="left: 620px; top: 906px"><b>LA MÉMOIRE</b><span>base SQLite locale</span></div>
+
+  <div class="boite" style="left: 30px; width: 262px"><b>Journal et santé</b><span>cerveau.log · sante.json</span></div>
+  <div class="boite" style="left: 330px; width: 880px">
+    <b>Souvenirs et tiroirs</b>
+    <span style="width: 400px">une phrase, un type, une fiabilité, un univers · index plein texte FTS5 + vecteurs</span>
+    <span style="width: 400px; margin-top: 8px"><em>Rangement en entonnoir :</em> chaque souvenir descend la hiérarchie jusqu'au tiroir le plus précis. Un tiroir est créé pour chaque nouvelle catégorie durable, et un sujet n'existe qu'à un seul endroit.</span>
+  </div>
+  <div class="boite" style="left: 1250px; width: 330px"><b>Annonces</b><span>montrées par la porte 1 au message suivant</span></div>
 
   <div class="legende">
     <span><span class="jev">Jev</span> décision chiffrée, seuil appliqué par le code</span>
     <span><span class="haiku">Haiku</span> rédaction des souvenirs</span>
-    <span style="color:#7fe3ff">⟶ flux de données</span>
+    <span style="color:#ffcf5a">⟶ flux de données</span>
+    <span>Les portes sont des hooks synchrones : Claude attend qu'elles se referment.</span>
   </div>
+
+  <script>
+    // Rayons de lumière partant du cœur, comme dans l'abstraction de Raphael
+    const g = document.getElementById("rayons");
+    for (let i = 0; i < 36; i++) {
+      const a = (i / 36) * 2 * Math.PI + 0.05, r1 = 160, r2 = 900;
+      const l = document.createElementNS("http://www.w3.org/2000/svg", "line");
+      l.setAttribute("x1", 800 + r1 * Math.cos(a)); l.setAttribute("y1", 455 + r1 * Math.sin(a));
+      l.setAttribute("x2", 800 + r2 * Math.cos(a)); l.setAttribute("y2", 455 + r2 * Math.sin(a));
+      g.appendChild(l);
+    }
+  </script>
 </body>
 </html>
