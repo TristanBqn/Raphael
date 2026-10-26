@@ -211,9 +211,6 @@ Adaptation directe ne veut pas dire copie : les deux projets ne répondent pas a
 | Public visé | Tout le monde, y compris sans profil technique | Utilisateurs de Claude Code à l'aise avec Python |
 | Maturité | Versions publiées, moteur qui se met à jour seul, tests de mutation, ADR | Projet personnel, sans tests automatisés |
 
-> [!TIP]
-> **Lequel choisir ?** Kenjaku si vous voulez un cerveau de travail qui digère vos outils et répond avec ses sources. Raphael si vous voulez que Claude Code se souvienne de vous d'une session à l'autre, sans y penser. Les deux peuvent cohabiter : ajoutez le dossier de Kenjaku à `EXCLUSIONS` dans `cerveau/config_local.py` pour que les deux cerveaux ne se superposent pas.
-
 ### Ce que Raphael doit à Kenjaku
 
 Rendons à César ce qui est à César. Raphael reprend de [Kenjaku](https://github.com/tpierrain/kenjaku) :
