@@ -268,4 +268,4 @@ Un grand merci à [Thomas Pierrain](https://github.com/tpierrain). Raphael est u
 
 ---
 
-Créé par [Tristan Bannier](https://github.com/TristanBqn) · Adapté de [Kenjaku](https://github.com/tpierrain/kenjaku)
+Créé par [Tristan Bannier](https://github.com/TristanBqn) · Adapté de [Kenjaku](https://github.com/tpierrain/kenjaku) par [Thomas Pierrain](https://github.com/tpierrain)
