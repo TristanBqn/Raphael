@@ -163,18 +163,11 @@ Kenjaku range des notes dans un wiki ; Raphael range des souvenirs d'une phrase,
 
 **Les tiroirs** organisent, comme un entonnoir : une hiérarchie définie, où chaque souvenir descend de la racine vers le tiroir le plus précis qui lui correspond.
 
-```
-toi/                     ← vous, quel que soit le contexte (toujours ouvert)
-├── Outils/              ← vos logiciels installés (toujours ouvert)
-└── <machine>/
-    └── <service>/       ← un service sans dossier local va sous sa machine
-perso/
-├── <projet>/            ← créé tout seul au premier souvenir du dossier ~/<projet>
-└── <sujet>/
-    └── <sous-sujet>/
-<client>/                ← un univers client, cloisonné
-└── <sujet>/
-```
+<p align="center">
+  <img src="assets/tiroirs.png" alt="L'arbre des tiroirs : un nouveau souvenir descend l'arbre jusqu'au tiroir le plus précis. Trois racines : toi/ (vous, toujours ouvert et commun à tous les univers, avec Outils/, toujours ouvert, et une machine contenant ses services), perso/ (univers par défaut, avec un tiroir par projet créé tout seul et des sujets découpés en sous-sujets), et un client (univers cloisonné, invisible depuis perso ou un autre client). Au rappel, seuls s'ouvrent toi/ et toi/Outils/, le tiroir du dossier courant, ceux que le message nomme et jusqu'à 3 sujets proches confirmés par Jev." width="100%">
+</p>
+
+<p align="center"><sub>Les noms entre chevrons sont des exemples : les tiroirs se créent au fil de vos souvenirs.</sub></p>
 
 Haiku descend l'arbre et range chaque souvenir dans le tiroir le plus profond qui convient ; il ne crée un tiroir que pour une catégorie durable, jamais pour une anecdote. Le code garantit qu'un sujet n'existe qu'à un seul endroit (un même nom, sans accents ni casse, renvoie au tiroir existant). Au rappel, Raphael n'ouvre que les tiroirs utiles : `toi` et `toi/Outils`, le tiroir du dossier courant, ceux que le message nomme (par leur nom ou un mot-clé), et jusqu'à 3 sujets proches par le sens que Jev doit confirmer. Ouvrir un tiroir ouvre ses parents et ses sous-tiroirs.
 
@@ -257,7 +250,7 @@ Les hooks, le worker, les décisions Jev, le stockage et les tiroirs se trouvent
 | `spikes/` | Test de la clé Jev, conversion Word → PDF |
 | `docs/` | Notes sur la documentation Jev |
 | `exemples/` | Déclaration des hooks pour `~/.claude/settings.json` |
-| `assets/` | Illustrations, diagramme des portes et schéma des décisions (sources SVG et HTML, rendus PNG) |
+| `assets/` | Illustrations et schémas : portes, décisions, tiroirs (sources SVG et HTML, rendus PNG) |
 
 Le projet n'a pas de tests automatisés. Pour vérifier une installation ou un changement :
 
@@ -272,7 +265,7 @@ Le journal `data/cerveau/cerveau.log` contient une ligne JSON par événement. T
 
 - [Kenjaku](https://github.com/tpierrain/kenjaku), de Thomas Pierrain (Apache 2.0) : Raphael en est une adaptation directe (voir [Ce que Raphael doit à Kenjaku](#ce-que-raphael-doit-à-kenjaku)).
 - [Jev](https://docs.typesafe.ai) (TypeSafe) pour les décisions, [EmbeddingGemma](https://huggingface.co/onnx-community/embeddinggemma-300m-ONNX) (Google) pour les embeddings.
-- *Moi, quand je me réincarne en Slime* (*Tensei Shitara Slime Datta Ken*) est l'œuvre de Fuse. Le nom de Raphael est un hommage de fan ; l'image de Raphael de la section Jev est tirée de l'anime (via le wiki Fandom de la série, droits réservés à leurs détenteurs) ; la bannière, le schéma d'analyse, le diagramme des portes et le schéma des décisions sont des créations originales. Ce projet n'est affilié ni à l'œuvre ni à ses éditeurs.
+- *Moi, quand je me réincarne en Slime* (*Tensei Shitara Slime Datta Ken*) est l'œuvre de Fuse. Le nom de Raphael est un hommage de fan ; l'image de Raphael de la section Jev est tirée de l'anime (via le wiki Fandom de la série, droits réservés à leurs détenteurs) ; la bannière, le schéma d'analyse, le diagramme des portes, le schéma des décisions et l'arbre des tiroirs sont des créations originales. Ce projet n'est affilié ni à l'œuvre ni à ses éditeurs.
 
 ---
 
