@@ -2,24 +2,28 @@
   <title>Raphael analyse un échange : Jev répond par des probabilités, le code applique un seuil</title>
   <defs>
     <radialGradient id="fond" cx="22%" cy="50%" r="90%">
-      <stop offset="0" stop-color="#15234d"/>
-      <stop offset="0.6" stop-color="#0a1230"/>
-      <stop offset="1" stop-color="#050816"/>
+      <stop offset="0" stop-color="#2c1f07"/>
+      <stop offset="0.6" stop-color="#0e1612"/>
+      <stop offset="1" stop-color="#020605"/>
     </radialGradient>
     <radialGradient id="orbe" cx="0.42" cy="0.38" r="0.6">
       <stop offset="0" stop-color="#ffffff"/>
-      <stop offset="0.3" stop-color="#c9f7ff"/>
-      <stop offset="0.7" stop-color="#4fc3ff"/>
-      <stop offset="1" stop-color="#1d4fd8"/>
+      <stop offset="0.3" stop-color="#fff2c4"/>
+      <stop offset="0.7" stop-color="#ffc94a"/>
+      <stop offset="1" stop-color="#b8781c"/>
     </radialGradient>
     <radialGradient id="aura" cx="0.5" cy="0.5" r="0.5">
-      <stop offset="0" stop-color="#5ee7ff" stop-opacity="0.55"/>
-      <stop offset="1" stop-color="#5ee7ff" stop-opacity="0"/>
+      <stop offset="0" stop-color="#ffc94a" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#ffc94a" stop-opacity="0"/>
     </radialGradient>
     <linearGradient id="panneau" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#5ee7ff" stop-opacity="0.14"/>
-      <stop offset="1" stop-color="#3a7bff" stop-opacity="0.05"/>
+      <stop offset="0" stop-color="#2fc7ad" stop-opacity="0.14"/>
+      <stop offset="1" stop-color="#ffc94a" stop-opacity="0.05"/>
     </linearGradient>
+    <radialGradient id="sarcelle" cx="1" cy="1" r="0.7">
+      <stop offset="0" stop-color="#1f9680" stop-opacity="0.3"/>
+      <stop offset="1" stop-color="#1f9680" stop-opacity="0"/>
+    </radialGradient>
     <filter id="lueur" x="-40%" y="-40%" width="180%" height="180%">
       <feGaussianBlur stdDeviation="4" result="flou"/>
       <feMerge><feMergeNode in="flou"/><feMergeNode in="SourceGraphic"/></feMerge>
@@ -27,6 +31,7 @@
   </defs>
 
   <rect width="1000" height="440" fill="url(#fond)"/>
+  <rect width="1000" height="440" fill="url(#sarcelle)"/>
   <g fill="#ffffff">
     <circle cx="40" cy="40" r="1.2" opacity="0.6"/><circle cx="330" cy="60" r="1" opacity="0.5"/>
     <circle cx="70" cy="390" r="1.3" opacity="0.5"/><circle cx="360" cy="400" r="1" opacity="0.4"/>
@@ -36,7 +41,7 @@
   <!-- Raphael : l'orbe de sagesse, ses anneaux d'analyse et son sceau -->
   <g transform="translate(205 220)">
     <circle r="150" fill="url(#aura)"/>
-    <g fill="none" stroke="#5ee7ff" filter="url(#lueur)">
+    <g fill="none" stroke="#ffc94a" filter="url(#lueur)">
       <circle r="128" stroke-width="1.2" stroke-opacity="0.45" stroke-dasharray="2 8 12 8"/>
       <polygon points="0,-112 97,56 -97,56" stroke-width="1.2" stroke-opacity="0.4"/>
       <polygon points="0,112 97,-56 -97,-56" stroke-width="1.2" stroke-opacity="0.4"/>
@@ -46,19 +51,19 @@
     </g>
     <circle r="54" fill="url(#orbe)" filter="url(#lueur)"/>
     <ellipse cx="-18" cy="-20" rx="16" ry="9" transform="rotate(-35 -18 -20)" fill="#ffffff" opacity="0.8"/>
-    <g fill="#c9f7ff" filter="url(#lueur)">
+    <g fill="#ffe08a" filter="url(#lueur)">
       <circle cx="111" cy="-40" r="4"/><circle cx="-60" cy="-101" r="3.5"/><circle cx="-91" cy="78" r="3.5"/>
     </g>
   </g>
-  <text x="205" y="408" text-anchor="middle" font-family="Segoe UI, Noto Sans, Helvetica Neue, Arial, sans-serif" font-size="16" fill="#9fb8dd" letter-spacing="3">RAPHAEL · JEV</text>
+  <text x="205" y="408" text-anchor="middle" font-family="Segoe UI, Noto Sans, Helvetica Neue, Arial, sans-serif" font-size="16" fill="#b9cfc4" letter-spacing="3">RAPHAEL · JEV</text>
 
   <!-- L'analyse -->
   <g font-family="Segoe UI, Noto Sans, Helvetica Neue, Arial, sans-serif">
-    <rect x="420" y="34" width="550" height="372" rx="14" fill="url(#panneau)" stroke="#5ee7ff" stroke-opacity="0.7" stroke-width="1.5"/>
-    <text x="446" y="72" font-size="19" font-weight="700" fill="#7fe3ff" letter-spacing="1">《Analyse》 <tspan fill="#eef8ff" font-weight="400" letter-spacing="0">Faut-il retenir cet échange ?</tspan></text>
-    <text x="446" y="100" font-size="16" font-style="italic" fill="#9fb8dd">« Mon NAS est un Synology installé au bureau. »</text>
+    <rect x="420" y="34" width="550" height="372" rx="14" fill="url(#panneau)" stroke="#ffc94a" stroke-opacity="0.7" stroke-width="1.5"/>
+    <text x="446" y="72" font-size="19" font-weight="700" fill="#ffd76a" letter-spacing="1">《Analyse》 <tspan fill="#f3ead2" font-weight="400" letter-spacing="0">Faut-il retenir cet échange ?</tspan></text>
+    <text x="446" y="100" font-size="16" font-style="italic" fill="#b9cfc4">« Mon NAS est un Synology installé au bureau. »</text>
 
-    <g font-size="17" fill="#eef8ff">
+    <g font-size="17" fill="#f3ead2">
       <text x="446" y="142">fait durable</text>
       <text x="446" y="174">préférence</text>
       <text x="446" y="206">leçon technique</text>
@@ -67,27 +72,27 @@
     </g>
     <g>
       <rect x="610" y="128" width="260" height="16" rx="8" fill="#ffffff" opacity="0.07"/>
-      <rect x="610" y="128" width="237" height="16" rx="8" fill="#5ee7ff" filter="url(#lueur)"/>
+      <rect x="610" y="128" width="237" height="16" rx="8" fill="#ffc94a" filter="url(#lueur)"/>
       <rect x="610" y="160" width="260" height="16" rx="8" fill="#ffffff" opacity="0.07"/>
-      <rect x="610" y="160" width="31" height="16" rx="8" fill="#5ee7ff"/>
+      <rect x="610" y="160" width="31" height="16" rx="8" fill="#ffc94a"/>
       <rect x="610" y="192" width="260" height="16" rx="8" fill="#ffffff" opacity="0.07"/>
-      <rect x="610" y="192" width="21" height="16" rx="8" fill="#5ee7ff"/>
-      <line x1="446" y1="222" x2="944" y2="222" stroke="#5ee7ff" stroke-opacity="0.25" stroke-dasharray="4 6"/>
+      <rect x="610" y="192" width="21" height="16" rx="8" fill="#ffc94a"/>
+      <line x1="446" y1="222" x2="944" y2="222" stroke="#ffc94a" stroke-opacity="0.25" stroke-dasharray="4 6"/>
       <rect x="610" y="232" width="260" height="16" rx="8" fill="#ffffff" opacity="0.07"/>
-      <rect x="610" y="232" width="16" height="16" rx="8" fill="#ffb86b"/>
+      <rect x="610" y="232" width="16" height="16" rx="8" fill="#3fd1b8"/>
       <rect x="610" y="264" width="260" height="16" rx="8" fill="#ffffff" opacity="0.07"/>
-      <rect x="610" y="264" width="26" height="16" rx="8" fill="#ffb86b"/>
+      <rect x="610" y="264" width="26" height="16" rx="8" fill="#3fd1b8"/>
     </g>
     <g font-size="17" font-weight="700" text-anchor="end">
-      <text x="944" y="142" fill="#7fe3ff">0,91</text>
-      <text x="944" y="174" fill="#7fe3ff">0,12</text>
-      <text x="944" y="206" fill="#7fe3ff">0,08</text>
-      <text x="944" y="246" fill="#ffb86b">0,05</text>
-      <text x="944" y="278" fill="#ffb86b">0,10</text>
+      <text x="944" y="142" fill="#ffd76a">0,91</text>
+      <text x="944" y="174" fill="#ffd76a">0,12</text>
+      <text x="944" y="206" fill="#ffd76a">0,08</text>
+      <text x="944" y="246" fill="#3fd1b8">0,05</text>
+      <text x="944" y="278" fill="#3fd1b8">0,10</text>
     </g>
 
-    <line x1="446" y1="304" x2="944" y2="304" stroke="#5ee7ff" stroke-opacity="0.45"/>
-    <text x="446" y="336" font-size="17" fill="#eef8ff">score = 0,91 × (1 − 0,10) = <tspan font-weight="700" fill="#7fe3ff">0,82</tspan>  ≥  seuil 0,25</text>
-    <text x="446" y="374" font-size="18" font-weight="700" fill="#7fe3ff" letter-spacing="1">《Rapport》 <tspan fill="#eef8ff" font-weight="400" letter-spacing="0">Retenu : Haiku rédigera le souvenir.</tspan></text>
+    <line x1="446" y1="304" x2="944" y2="304" stroke="#ffc94a" stroke-opacity="0.45"/>
+    <text x="446" y="336" font-size="17" fill="#f3ead2">score = 0,91 × (1 − 0,10) = <tspan font-weight="700" fill="#ffd76a">0,82</tspan>  ≥  seuil 0,25</text>
+    <text x="446" y="374" font-size="18" font-weight="700" fill="#ffd76a" letter-spacing="1">《Rapport》 <tspan fill="#f3ead2" font-weight="400" letter-spacing="0">Retenu : Haiku rédigera le souvenir.</tspan></text>
   </g>
 </svg>
