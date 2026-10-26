@@ -260,7 +260,7 @@ Le journal `data/cerveau/cerveau.log` contient une ligne JSON par événement. T
 
 ## Crédits et remerciements
 
-Un grand merci à [Thomas Pierrain](https://github.com/tpierrain) : sans Kenjaku, Raphael n'existerait pas. Ses principes (du déterminisme partout où c'est possible, des univers, la discipline d'affirmation) et la générosité avec laquelle il les a documentés et publiés ont servi de fondation à tout ce projet.
+Un grand merci à [Thomas Pierrain](https://github.com/tpierrain) : sans Kenjaku, Raphael n'existerait pas. Ses principes (du déterminisme partout où c'est possible, des univers, la discipline d'affirmation) et la documentation fournie ont servi de fondation à tout ce projet d'adaptation.
 
 - [Kenjaku](https://github.com/tpierrain/kenjaku), de Thomas Pierrain (Apache 2.0) : Raphael en est une adaptation directe (voir [Ce que Raphael doit à Kenjaku](#ce-que-raphael-doit-à-kenjaku)).
 - [Jev](https://docs.typesafe.ai) (TypeSafe) pour les décisions, [EmbeddingGemma](https://huggingface.co/onnx-community/embeddinggemma-300m-ONNX) (Google) pour les embeddings.
