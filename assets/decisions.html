@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Quand chaque cerveau décide</title>
+<!-- Source de assets/decisions.png : capture à 1300 × 812 (navigateur headless, facteur 2). Même palette que portes.html. -->
+<style>
+  html, body { margin: 0; width: 1300px; height: 812px; overflow: hidden; }
+  body {
+    position: relative; box-sizing: border-box; padding: 22px 30px;
+    font-family: "Segoe UI", "Noto Sans", "Helvetica Neue", Arial, sans-serif; color: #f3ead2;
+    background:
+      radial-gradient(circle at 0% 100%, rgba(31, 150, 128, 0.28), transparent 38%),
+      radial-gradient(circle at 100% 0%, rgba(31, 150, 128, 0.2), transparent 36%),
+      radial-gradient(circle at 55% 45%, #2c1f07 0%, #0e1612 45%, #04100d 75%, #020605 100%);
+  }
+  h1 { margin: 0; font-size: 32px; letter-spacing: 3px;
+       background: linear-gradient(90deg, #fff6dc, #ffc94a); -webkit-background-clip: text; color: transparent; }
+  .sous-titre { margin: 4px 0 18px; font-size: 18px; color: #b9cfc4; }
+
+  .grille { display: grid; grid-template-columns: 150px 1fr 1fr 1fr; column-gap: 16px; row-gap: 14px; }
+  .colonne { font-size: 15.5px; font-weight: 700; letter-spacing: 2px; color: #c9a24a; text-transform: uppercase;
+             border-bottom: 1px solid rgba(255, 201, 74, 0.35); padding-bottom: 6px; }
+  .colonne span { display: block; font-size: 12.5px; font-weight: 400; letter-spacing: 0; text-transform: none; color: #7fa59a; margin-top: 2px; font-size: 14px; }
+
+  .couloir { display: flex; flex-direction: column; justify-content: center; padding-left: 12px; border-left: 4px solid; }
+  .couloir b { font-size: 23px; letter-spacing: 2px; }
+  .couloir span { font-size: 14.5px; color: #b9cfc4; margin-top: 4px; line-height: 1.35; }
+  .couloir.kenjaku { border-color: #3fd1b8; } .couloir.kenjaku b { color: #3fd1b8; }
+  .couloir.raphael { border-color: #ffc94a; } .couloir.raphael b { color: #ffd76a; text-shadow: 0 0 10px rgba(255, 201, 74, 0.6); }
+
+  .case { display: flex; flex-direction: column; gap: 10px; }
+  .carte { box-sizing: border-box; border-radius: 12px; padding: 12px 14px; font-size: 16px; line-height: 1.4; }
+  .carte h3 { margin: 0 0 5px; font-size: 18px; }
+  .kenjaku .carte, .carte.k { background: linear-gradient(135deg, rgba(47, 199, 173, 0.14), rgba(47, 199, 173, 0.03)), #08181a;
+                              border: 1.5px solid rgba(63, 209, 184, 0.6); }
+  .carte.k h3 { color: #7ff0dc; }
+  .carte.r { background: linear-gradient(135deg, rgba(255, 201, 74, 0.16), rgba(255, 201, 74, 0.03)), #140f05;
+             border: 1.5px solid #ffc94a; box-shadow: 0 0 22px rgba(255, 201, 74, 0.22); }
+  .carte.r h3 { color: #ffd76a; }
+  .carte.vide { background: transparent; border: 1.5px dashed rgba(185, 207, 196, 0.35); color: #9db3aa; }
+  .carte.vide h3 { color: #b9cfc4; }
+  .carte.neutre { background: #0b1714; border: 1.5px solid rgba(243, 234, 210, 0.35); }
+  .carte.neutre h3 { color: #f3ead2; }
+  .carte code { font-family: Consolas, "Cascadia Mono", monospace; font-size: 14.5px; color: #e8d9a8; }
+
+  .qui { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 7px; }
+  .puce { font-size: 13px; font-weight: 700; border-radius: 6px; padding: 1px 7px; }
+  .claude { background: #f3ead2; color: #1a1103; }
+  .jev { background: #ffc94a; color: #1a1103; }
+  .haiku { background: #3fd1b8; color: #04110e; }
+  .vous { background: transparent; color: #f3ead2; border: 1.5px solid #f3ead2; }
+  .code { background: #2a3b37; color: #cfe3dc; border: 1px solid #5d7a72; }
+
+  .fleche { color: #ffcf5a; font-size: 18px; text-align: center; line-height: 1; margin: -4px 0; }
+  .fleche.k { color: #3fd1b8; }
+
+  .bilan { margin-top: 18px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; font-size: 16px; line-height: 1.45; }
+  .bilan div { padding: 10px 14px; border-radius: 10px; background: rgba(6, 16, 14, 0.75); }
+  .bilan .k { border-left: 4px solid #3fd1b8; } .bilan .r { border-left: 4px solid #ffc94a; }
+  .bilan b { color: #fff6dc; }
+  .legende { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 10px 22px; font-size: 14.5px; color: #b9cfc4; align-items: center; }
+</style>
+</head>
+<body>
+  <h1>QUAND CHAQUE CERVEAU DÉCIDE</h1>
+  <div class="sous-titre">Le même message, deux façons de décider quoi rappeler et quoi retenir.</div>
+
+  <div class="grille">
+    <div></div>
+    <div class="colonne">① Avant la réponse<span>vous venez d'envoyer votre message</span></div>
+    <div class="colonne">② Pendant la réponse<span>Claude travaille</span></div>
+    <div class="colonne">③ Après la réponse<span>la conversation continue</span></div>
+
+    <!-- Kenjaku -->
+    <div class="couloir kenjaku"><b>KENJAKU</b><span>le LLM décide pendant la réponse, vous validez</span></div>
+    <div class="case">
+      <div class="carte vide"><h3>Rien ne se déclenche</h3>Aucun hook de rappel : le message arrive tel quel à Claude.</div>
+    </div>
+    <div class="case">
+      <div class="carte k"><h3>Rappeler : Claude choisit de chercher</h3>Il appelle <code>search_vault</code> quand sa constitution le lui demande.
+        <div class="qui"><span class="puce claude">Claude</span></div></div>
+      <div class="carte k"><h3>Retenir : Claude propose une note</h3><code>/file-back</code>, après un échange qui en vaut la peine.
+        <div class="qui"><span class="puce claude">Claude</span><span class="puce vous">vous dites oui</span></div></div>
+    </div>
+    <div class="case">
+      <div class="carte k"><h3>Écrire : des scripts testés</h3>La note est construite conforme, puis commit et push automatiques.
+        <div class="qui"><span class="puce code">code</span></div></div>
+    </div>
+
+    <!-- Raphael -->
+    <div class="couloir raphael"><b>RAPHAEL</b><span>le code déclenche avant et après, Jev juge, vous corrigez</span></div>
+    <div class="case">
+      <div class="carte r"><h3>Porte 1 · rappeler</h3>À chaque message, Jev note chaque souvenir candidat de 0 à 1 ; le code garde ceux qui passent le seuil (au plus 5).
+        <div class="qui"><span class="puce code">code</span><span class="puce jev">Jev</span></div></div>
+    </div>
+    <div class="case">
+      <div class="carte neutre"><h3>Claude répond</h3>Les souvenirs sont déjà dans son contexte. Il ne décide de rien pour la mémoire.
+        <div class="qui"><span class="puce claude">Claude</span></div></div>
+    </div>
+    <div class="case">
+      <div class="carte r"><h3>Porte 2 · retenir</h3>En arrière-plan, Jev juge chaque échange : retenir, attendre la suite ou rejeter. Haiku rédige le souvenir.
+        <div class="qui"><span class="puce code">code</span><span class="puce jev">Jev</span><span class="puce haiku">Haiku</span><span class="puce vous">vous corrigez : faux / inutile</span></div></div>
+    </div>
+  </div>
+
+  <div class="bilan">
+    <div class="k"><b>Kenjaku</b> : chaque note est voulue par Claude et validée par vous. Fiable note par note, mais un échange n'est retenu que si Claude pense à le proposer.</div>
+    <div class="r"><b>Raphael</b> : chaque échange est jugé, toujours au même moment, avec un seuil écrit dans le code. Aucun échange n'échappe au jugement, mais un souvenir peut être retenu à tort : vous le corrigez après coup.</div>
+  </div>
+
+  <div class="legende">
+    <span><span class="puce claude">Claude</span> le LLM qui vous répond</span>
+    <span><span class="puce jev">Jev</span> probabilité de 0 à 1, comparée à un seuil</span>
+    <span><span class="puce haiku">Haiku</span> rédaction</span>
+    <span><span class="puce code">code</span> toujours la même règle</span>
+    <span><span class="puce vous">vous</span> votre intervention</span>
+  </div>
+</body>
+</html>

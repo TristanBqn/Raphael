@@ -6,7 +6,9 @@
 
 Des hooks capturent chaque échange, Jev décide avec des probabilités, et vos souvenirs reviennent au bon moment, dans toutes vos sessions.
 
-[Fonctionnement](#fonctionnement) · [Installation](#installation) · [Raphael et Kenjaku](#raphael-et-kenjaku)
+![Windows](https://img.shields.io/badge/Windows-uniquement-ffc94a?style=flat-square&labelColor=0e1612) ![Python 3.14](https://img.shields.io/badge/Python-3.14-ffc94a?style=flat-square&labelColor=0e1612) ![Claude Code](https://img.shields.io/badge/Claude%20Code-4%20hooks-3fd1b8?style=flat-square&labelColor=0e1612) ![Jev](https://img.shields.io/badge/d%C3%A9cisions-Jev%20(TypeSafe)-3fd1b8?style=flat-square&labelColor=0e1612) [![Kenjaku](https://img.shields.io/badge/adapt%C3%A9%20de-Kenjaku-3fd1b8?style=flat-square&labelColor=0e1612)](https://github.com/tpierrain/kenjaku)
+
+[Pourquoi Raphael ?](#pourquoi-raphael-) · [Installation](#installation) · [Les portes](#les-portes) · [Jev](#jev--décider-avec-des-probabilités-pas-avec-la-bonne-volonté-dun-llm) · [Raphael et Kenjaku](#raphael-et-kenjaku)
 
 </div>
 
@@ -20,7 +22,7 @@ Des hooks capturent chaque échange, Jev décide avec des probabilités, et vos 
 
 Raphael donne une mémoire à long terme à [Claude Code](https://claude.com/claude-code). C'est une **adaptation directe de [Kenjaku](https://github.com/tpierrain/kenjaku)**, le second cerveau de Thomas Pierrain, dont il reprend les principes et une bonne partie des mécanismes, réécrits en Python pour une autre façon de capturer et de rappeler.
 
-Sa particularité : **la capture et le rappel sont déterministes**. Ce n'est pas le LLM qui décide seul de mémoriser (il oublie, ou retient n'importe quoi) : des hooks capturent chaque échange, et un modèle de décision spécialisé, Jev, tranche avec des probabilités que le code compare à des seuils fixes.
+Sa particularité : **le moment et la règle de chaque décision sont déterministes**. Ce n'est pas le LLM qui décide seul de mémoriser (il oublie, ou retient n'importe quoi) : des hooks soumettent chaque échange à un modèle de décision spécialisé, Jev, dont les probabilités sont comparées par le code à des seuils fixes.
 
 | Retenir | Rappeler | Cloisonner |
 | --- | --- | --- |
@@ -45,7 +47,8 @@ Répondre `faux 2` désactive aussitôt le souvenir n° 2 ; `inutile` le note co
 
 ## Installation
 
-Prérequis : **Windows** uniquement (`msvcrt`, `winreg`, processus détachés), Python 3.14 (testé), Claude Code installé et connecté (`claude` dans le PATH), une clé API TypeSafe (Jev), et environ 1,4 Go de RAM pour le service d'embeddings (il s'arrête seul après 30 min d'inactivité).
+> [!NOTE]
+> Prérequis : **Windows** uniquement (`msvcrt`, `winreg`, processus détachés), Python 3.14 (testé), Claude Code installé et connecté (`claude` dans le PATH), une clé API TypeSafe (Jev), et environ 1,4 Go de RAM pour le service d'embeddings (il s'arrête seul après 30 min d'inactivité).
 
 ```powershell
 git clone https://github.com/TristanBqn/Raphael.git
@@ -71,6 +74,7 @@ Puis :
 
 Optionnel : importer l'historique Claude Code existant avec `.venv\Scripts\python.exe cerveau\import_historique.py` (`--evaluer-seulement` pour estimer d'abord le coût).
 
+> [!IMPORTANT]
 > **Confidentialité** — Le texte des échanges est **envoyé à l'API TypeSafe** (Jev) pour évaluation, et à Claude Haiku pour la rédaction des souvenirs. Les secrets reconnus (clés, jetons, mots de passe) sont masqués avant tout stockage ou envoi (`cerveau/masque.py`), mais ce masquage reste heuristique. Tout le reste est local : base SQLite et journal dans `data/cerveau/` (ignoré par git), embeddings calculés sur la machine, service limité à `127.0.0.1`. Les textes bruts des échanges sont purgés après 90 jours ; seuls les souvenirs rédigés restent.
 
 ### Régler Raphael
@@ -125,7 +129,7 @@ Toutes les questions d'un appel sont évaluées en parallèle, en 150 à 250 ms 
   <img src="assets/raphael-jev.png" alt="Raphael analyse un échange : Jev donne une probabilité pour chaque critère (fait durable 0,91, préférence 0,12, leçon 0,08, simple consigne 0,05, détail isolé 0,10) ; le code calcule un score de 0,82, au-dessus du seuil de 0,25, et l'échange est retenu" width="100%">
 </p>
 
-- **La décision devient reproductible.** Les probabilités de Jev peuvent varier de quelques centièmes d'un appel à l'autre, mais la règle de décision, elle, est écrite dans `config.py`.
+- **La décision devient reproductible.** Les probabilités de Jev peuvent varier de quelques centièmes d'un appel à l'autre, mais la règle de décision, elle, est écrite dans `config.py`. Mesuré sur trois échanges jugés 8 fois chacun : l'écart-type reste sous 0,013 et aucune décision n'a changé ; seul un score à quelques centièmes du seuil pourrait basculer.
 - **La grille de capture est mesurée.** Sur un jeu de 50 passages annotés à la main, une seule question « faut-il retenir ? » plafonnait à une AUC de 0,69 et se trompait plus souvent que « tout garder ». Découpée en 7 questions atomiques combinées par le code, la grille monte à 0,80 :
   ```
   positif   = max(fait, préférence, leçon, règle de projet, événement daté)
@@ -185,21 +189,37 @@ Adaptation directe ne veut pas dire copie : les deux projets ne répondent pas a
 - **Kenjaku est un lieu où l'on va** : un wiki LLM « à la Karpathy » (Markdown, compatible Obsidian, versionné dans git), alimenté par vos sources de travail (Slack, Drive, Gmail, Notion, transcriptions de réunions…). On ouvre son cerveau pour lui demander *« qu'a-t-on décidé sur le projet X, et qui s'en occupe ? »*.
 - **Raphael est une présence qui vous suit** : une couche invisible dans *toutes* vos sessions Claude Code, quel que soit le dossier. Il apprend de vos conversations avec Claude (votre machine, vos comptes, vos préférences, les leçons tirées d'une erreur, les décisions de vos projets) et injecte de lui-même ce qui sert, au moment où vous écrivez.
 
+<p align="center">
+  <img src="assets/decisions.png" alt="Quand chaque cerveau décide. Kenjaku : avant la réponse, rien ne se déclenche ; pendant la réponse, Claude choisit de chercher dans le vault et propose une note, que vous validez ; après, des scripts testés écrivent la note et la versionnent. Raphael : avant la réponse, la porte 1 fait noter chaque souvenir candidat par Jev et le code garde ceux qui passent le seuil ; pendant la réponse, Claude répond sans rien décider pour la mémoire ; après, la porte 2 fait juger chaque échange par Jev, Haiku rédige, et vous corrigez après coup." width="100%">
+</p>
+
+<p align="center"><sub>Kenjaku laisse décider le LLM pendant la réponse, avec votre accord ; Raphael fait décider Jev avant et après, contre des seuils fixes.</sub></p>
+
 | | **Kenjaku** | **Raphael** |
 | --- | --- | --- |
 | **Usage** | On ouvre le dossier du cerveau (CLI ou Claude Desktop) pour l'interroger | Actif dans toutes les sessions Claude Code, sans rien ouvrir |
 | **Ce qu'il retient** | Vos sources de travail : messages, documents, réunions, notes | Vos conversations avec Claude Code |
-| **Qui décide de mémoriser** | Claude, qui rédige et range les notes du wiki, aidé de skills (`/file-back`, `/consolidate`, `/lint`) | Des hooks capturent chaque échange ; **Jev décide** (retenir, attendre la suite, rejeter) ; Haiku ne fait que rédiger |
-| **Qui décide de rappeler** | Claude interroge le vault via le serveur MCP `vault-rag` | La porte 1 cherche et injecte d'office les souvenirs que Jev juge pertinents, **avant** que Claude ne réponde |
-| **Stockage** | Notes Markdown + `[[wikilinks]]`, dans votre dépôt git (commit et push automatiques) | Base SQLite : souvenirs atomiques d'une phrase, datés, avec leur fiabilité et une date d'expiration éventuelle |
-| **Recherche** | RAG local (EmbeddingGemma, ou une API, ou Ollama) sur un index vectoriel SQLite | Hybride EmbeddingGemma + plein texte FTS5, fusion par rang (RRF), puis tri final par Jev, limité aux tiroirs utiles |
-| **Coût en contexte** | Une constitution `CLAUDE.engine.md` (environ 60 Ko) chargée à chaque session | Rien au démarrage ; quelques lignes injectées seulement quand un souvenir sert |
-| **Correction** | On édite les notes, dans Obsidian ou ailleurs | On répond `faux 2` ou `inutile` au message suivant |
-| **Pile** | Node.js ≥ 20, macOS et Windows, installateur guidé | Python 3.14, Windows uniquement |
-| **Public visé** | Tout le monde, y compris sans profil technique | Utilisateurs de Claude Code à l'aise avec Python |
-| **Maturité** | Versions publiées, moteur qui se met à jour seul, tests de mutation, ADR | Projet personnel, sans tests automatisés |
+| **🔎 Rappeler** | | |
+| Quand | Pendant la réponse, si Claude décide de chercher | Avant que Claude ne lise votre message, à chaque message |
+| Qui décide | Claude, guidé par sa constitution, interroge le serveur MCP `vault-rag` | Le code déclenche la porte 1 ; **Jev** note chaque souvenir candidat ; le code garde ceux qui passent le seuil |
+| Comment | RAG local (EmbeddingGemma, ou une API, ou Ollama) sur un index vectoriel SQLite | Hybride EmbeddingGemma + plein texte FTS5, fusion par rang (RRF), puis tri final par Jev, limité aux tiroirs utiles |
+| **🧠 Retenir** | | |
+| Quand | Pendant la conversation, quand Claude juge qu'un échange en vaut la peine | Après chaque réponse, en arrière-plan ; un problème encore ouvert attend la suite de la conversation |
+| Qui décide | Claude propose une note (`/file-back`) ; **vous validez** | **Jev** juge chaque échange (retenir, attendre la suite, rejeter) ; vous n'êtes pas sollicité |
+| Qui écrit | Des scripts testés : la note est conforme par construction, puis commit et push automatiques | Haiku rédige ; le code range dans les tiroirs et évite les doublons |
+| Stockage | Notes Markdown + `[[wikilinks]]`, dans votre dépôt git | Base SQLite : souvenirs atomiques d'une phrase, datés, avec leur fiabilité et une date d'expiration éventuelle |
+| Correction | On édite les notes, dans Obsidian ou ailleurs | On répond `faux 2` ou `inutile` au message suivant |
+| **⚖️ Déterminisme** | | |
+| Toujours la même règle | L'écriture : garde-fous, scripts de construction, versionnement automatique | Le déclenchement et la décision : chaque échange est jugé au même moment, contre un seuil écrit dans le code |
+| Ce qui reste un jugement | Chercher ou retenir : c'est Claude qui y pense, et vous qui confirmez | La probabilité donnée par Jev (stable à quelques centièmes près) et la rédaction par Haiku |
+| **🧰 En pratique** | | |
+| Coût en contexte | Une constitution `CLAUDE.engine.md` (environ 60 Ko) chargée à chaque session | Rien au démarrage ; quelques lignes injectées seulement quand un souvenir sert |
+| Pile | Node.js ≥ 20, macOS et Windows, installateur guidé | Python 3.14, Windows uniquement |
+| Public visé | Tout le monde, y compris sans profil technique | Utilisateurs de Claude Code à l'aise avec Python |
+| Maturité | Versions publiées, moteur qui se met à jour seul, tests de mutation, ADR | Projet personnel, sans tests automatisés |
 
-> **Lequel choisir ?** — Kenjaku si vous voulez un cerveau de travail qui digère vos outils et répond avec ses sources. Raphael si vous voulez que Claude Code se souvienne de vous d'une session à l'autre, sans y penser. Les deux peuvent cohabiter : ajoutez le dossier de Kenjaku à `EXCLUSIONS` dans `cerveau/config_local.py` pour que les deux cerveaux ne se superposent pas.
+> [!TIP]
+> **Lequel choisir ?** Kenjaku si vous voulez un cerveau de travail qui digère vos outils et répond avec ses sources. Raphael si vous voulez que Claude Code se souvienne de vous d'une session à l'autre, sans y penser. Les deux peuvent cohabiter : ajoutez le dossier de Kenjaku à `EXCLUSIONS` dans `cerveau/config_local.py` pour que les deux cerveaux ne se superposent pas.
 
 ### Ce que Raphael doit à Kenjaku
 
@@ -237,7 +257,7 @@ Les hooks, le worker, les décisions Jev, le stockage et les tiroirs se trouvent
 | `spikes/` | Test de la clé Jev, conversion Word → PDF |
 | `docs/` | Notes sur la documentation Jev |
 | `exemples/` | Déclaration des hooks pour `~/.claude/settings.json` |
-| `assets/` | Illustrations et diagramme des portes (sources SVG et HTML, rendus PNG) |
+| `assets/` | Illustrations, diagramme des portes et schéma des décisions (sources SVG et HTML, rendus PNG) |
 
 Le projet n'a pas de tests automatisés. Pour vérifier une installation ou un changement :
 
@@ -252,7 +272,7 @@ Le journal `data/cerveau/cerveau.log` contient une ligne JSON par événement. T
 
 - [Kenjaku](https://github.com/tpierrain/kenjaku), de Thomas Pierrain (Apache 2.0) : Raphael en est une adaptation directe (voir [Ce que Raphael doit à Kenjaku](#ce-que-raphael-doit-à-kenjaku)).
 - [Jev](https://docs.typesafe.ai) (TypeSafe) pour les décisions, [EmbeddingGemma](https://huggingface.co/onnx-community/embeddinggemma-300m-ONNX) (Google) pour les embeddings.
-- *Moi, quand je me réincarne en Slime* (*Tensei Shitara Slime Datta Ken*) est l'œuvre de Fuse. Le nom de Raphael est un hommage de fan ; l'image de Raphael de la section Jev est tirée de l'anime (via le wiki Fandom de la série, droits réservés à leurs détenteurs) ; la bannière, le schéma d'analyse et le diagramme des portes sont des créations originales. Ce projet n'est affilié ni à l'œuvre ni à ses éditeurs.
+- *Moi, quand je me réincarne en Slime* (*Tensei Shitara Slime Datta Ken*) est l'œuvre de Fuse. Le nom de Raphael est un hommage de fan ; l'image de Raphael de la section Jev est tirée de l'anime (via le wiki Fandom de la série, droits réservés à leurs détenteurs) ; la bannière, le schéma d'analyse, le diagramme des portes et le schéma des décisions sont des créations originales. Ce projet n'est affilié ni à l'œuvre ni à ses éditeurs.
 
 ---
 
